@@ -1,0 +1,5 @@
+[submodule "QLNet"]
+	path = QLNet
+	url = https://github.com/amaggiulli/QLNet.git
+	branch = develop
+	ignore = dirty

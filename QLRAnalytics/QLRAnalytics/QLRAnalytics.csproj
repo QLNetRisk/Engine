@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5384C176-728D-4634-BA30-B3AC5BEF53FA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QLRAnalytics</RootNamespace>
+    <AssemblyName>QLRAnalytics</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="QLNet">
+      <HintPath>..\..\QLNet\src\QLNet\bin\Debug\net45\QLNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App\App.cs" />
+    <Compile Include="App\Parameters.cs" />
+    <Compile Include="Engine\NpvCalculator.cs" />
+    <Compile Include="Engine\ObservationMode.cs" />
+    <Compile Include="Engine\ValuationCalculator.cs" />
+    <Compile Include="Engine\ValuationEngine.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenario\CrossAssetModelScenarioGenerator.cs" />
+    <Compile Include="Scenario\Scenario.cs" />
+    <Compile Include="Scenario\ScenarioGenerator.cs" />
+    <Compile Include="Scenario\ScenarioPathGenerator.cs" />
+    <Compile Include="Scenario\ScenarioSimMarket.cs" />
+    <Compile Include="Simulation\DateGrid.cs" />
+    <Compile Include="Simulation\SimMarket.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Aggregation\" />
+    <Folder Include="Cube\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\QLRData\QLRData\QLRData.csproj">
+      <Project>{9b987fe6-efcb-42a7-9734-3ac65ce0d53e}</Project>
+      <Name>QLRData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QuantExt\QuantExt\QuantExt.csproj">
+      <Project>{569d4d07-8911-4f5b-809c-3a99c7958291}</Project>
+      <Name>QuantExt</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
