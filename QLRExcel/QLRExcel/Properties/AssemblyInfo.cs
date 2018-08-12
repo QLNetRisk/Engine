@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("QLRData")]
+[assembly: AssemblyTitle("QLRExcel")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("QLNetRisk")]
-[assembly: AssemblyProduct("QLRData")]
-[assembly: AssemblyCopyright("Copyright © QLNetRisk 2018")]
+[assembly: AssemblyCompany("DNBNNOR")]
+[assembly: AssemblyProduct("QLRExcel")]
+[assembly: AssemblyCopyright("Copyright © DNBNNOR 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9b987fe6-efcb-42a7-9734-3ac65ce0d53e")]
+[assembly: Guid("05d36b43-1f45-48e0-9753-77ac7b18bcfa")]
 
 // Version information for an assembly consists of the following four values:
 //

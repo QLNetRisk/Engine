@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("qlr")]
+[assembly: AssemblyTitle("QLR")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DNBNNOR")]
-[assembly: AssemblyProduct("qlr")]
-[assembly: AssemblyCopyright("Copyright © DNBNNOR 2018")]
+[assembly: AssemblyCompany("QLNetRisk")]
+[assembly: AssemblyProduct("QLR")]
+[assembly: AssemblyCopyright("Copyright © QLNetRisk 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("03c5d13a-432e-4584-b489-ae1f8db3af79")]
+[assembly: Guid("03d4a2cf-c7fc-4082-bf16-9c70c3025133")]
 
 // Version information for an assembly consists of the following four values:
 //

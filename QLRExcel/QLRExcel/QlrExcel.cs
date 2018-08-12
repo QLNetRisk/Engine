@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace qlr
+namespace QLRExcel
 {
-    class qlr
+    public class QlrExcel
     {
-        static void Main(string[] args)
-        {
-        }
     }
 }

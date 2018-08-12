@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{03C5D13A-432E-4584-B489-AE1F8DB3AF79}</ProjectGuid>
+    <ProjectGuid>{03D4A2CF-C7FC-4082-BF16-9C70C3025133}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>qlr</RootNamespace>
-    <AssemblyName>qlr</AssemblyName>
+    <RootNamespace>QLR</RootNamespace>
+    <AssemblyName>QLR</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,11 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="qlr.cs" />
+    <Compile Include="Qlr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QLRAnalytics\QLRAnalytics\QLRAnalytics.csproj">
+      <Project>{5384c176-728d-4634-ba30-b3ac5bef53fa}</Project>
+      <Name>QLRAnalytics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLRData\QLRData\QLRData.csproj">
+      <Project>{9b987fe6-efcb-42a7-9734-3ac65ce0d53e}</Project>
+      <Name>QLRData</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

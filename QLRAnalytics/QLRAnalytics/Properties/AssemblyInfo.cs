@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("QLRAnalytics")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DNBNNOR")]
+[assembly: AssemblyCompany("QLNetRisk")]
 [assembly: AssemblyProduct("QLRAnalytics")]
-[assembly: AssemblyCopyright("Copyright © DNBNNOR 2018")]
+[assembly: AssemblyCopyright("Copyright © QLNetRisk 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
