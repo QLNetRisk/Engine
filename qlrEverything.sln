@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QLNet", "QLNet\src\QLNet\QL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLR", "App\QLR.csproj", "{03D4A2CF-C7FC-4082-BF16-9C70C3025133}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLRExcel", "QLRExcel\QLRExcel\QLRExcel.csproj", "{05D36B43-1F45-48E0-9753-77AC7B18BCFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{03D4A2CF-C7FC-4082-BF16-9C70C3025133}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03D4A2CF-C7FC-4082-BF16-9C70C3025133}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03D4A2CF-C7FC-4082-BF16-9C70C3025133}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D36B43-1F45-48E0-9753-77AC7B18BCFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D36B43-1F45-48E0-9753-77AC7B18BCFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D36B43-1F45-48E0-9753-77AC7B18BCFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D36B43-1F45-48E0-9753-77AC7B18BCFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
