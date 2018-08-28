@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Diagnostics;
 using QLNet;
 using QLRData;
@@ -264,8 +265,28 @@ namespace QLRAnalytics
         /// </summary>
         public void SetupLog()
         {
+            string outputPath = _parameters.Get("setup", "outputPath");
+            string logFile = outputPath + "/" + _parameters.Get("setup", "logFile");
+            int logMask = 15; // Default level
 
+            // Get log mask if available
+            if(_parameters.Has("setup", "logMask"))
+            {
+                logMask = Parsers.ParseInteger(_parameters.Get("setup", "logMask"));
+            }
+
+            if(!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+
+            QLNet.Utils.QL_REQUIRE(File.GetAttributes(outputPath) == FileAttributes.Directory, () => "output path '" + outputPath + "' is not a directory");
+
+            //Log::instance().registerLogger(boost::make_shared<FileLogger>(logFile));
+            //Log::instance().setMask(logMask);
+            //Log::instance().switchOn();
         }
+
         /// <summary>
         /// load market conventions
         /// </summary>
@@ -287,7 +308,12 @@ namespace QLRAnalytics
         /// </summary>
         public void GetMarketParameters()
         {
-
+            if(_parameters.Has("setup", "marketConfigFile") && _parameters.Get("setup", "marketConfigFile") != "")
+            {
+                string inputPath = _parameters.Get("setup", "inputPath");
+                string marketConfigFile = inputPath + "/" + _parameters.Get("setup", "marketConfigFile");
+                //_marketParameters
+            }
         }
         /// <summary>
         /// build today's market

@@ -67,6 +67,32 @@ namespace QLRData
             } 
         }
 
+        public static double ParseDouble(string s)
+        {
+            try
+            {
+                return Convert.ToDouble(s);
+            }
+            catch (Exception ex)
+            {
+                QLNet.Utils.QL_FAIL("Failed to parse double " + s + " " + ex.ToString());
+                throw new Exception();
+            }
+        }
+
+        public static int ParseInteger(string s)
+        {
+            try
+            {
+                return Convert.ToInt32(s);
+            }
+            catch(Exception ex)
+            {                
+                QLNet.Utils.QL_FAIL("Failed to parse integer " + s + " " + ex.ToString());
+                throw new Exception();
+            }
+        }
+
         public static bool ParseBool(string s)
         {
             Dictionary<string, bool> b = new Dictionary<string, bool>{{"Y", true}, {"YES", true}, {"TRUE", true},   {"true", true},   {"1", true},
@@ -183,7 +209,7 @@ namespace QLRData
             else
             {
                 // Try to split them up
-                List<string> calendarNames = new List<string>();
+                List<string> calendarNames = s.Split(',').ToList();
                 //string.Split(calendarNames, s, boost::is_any_of(",()")); // , is delimiter, the brackets may arise if joint calendar
                 // now remove any leading strings indicating a joint calendar
                 // TODO: Fixme!

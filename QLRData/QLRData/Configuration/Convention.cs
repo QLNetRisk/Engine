@@ -40,6 +40,17 @@ namespace QLRData
 
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        public Convention(string id, Type type)
+        {
+            _id = id;
+            _type = type;
+        }
+
         public string Id()
         {
             return _id;

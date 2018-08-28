@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="Configuration\Convention.cs" />
     <Compile Include="Configuration\Conventions.cs" />
+    <Compile Include="Configuration\DepositConvention.cs" />
+    <Compile Include="Configuration\FXConvention.cs" />
+    <Compile Include="Configuration\ZeroRateConvention.cs" />
     <Compile Include="MarketData\CurveSpec.cs" />
     <Compile Include="MarketData\FxSpot.cs" />
     <Compile Include="MarketData\FxTriangulation.cs" />

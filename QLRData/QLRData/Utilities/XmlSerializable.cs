@@ -26,6 +26,16 @@ namespace QLRData
             doc.Save(fileName);            
         }
 
+        //public XmlNode GetChildNode(XmlNode node, string name)
+        //{
+        //    XmlNode conventionsNode = node.SelectSingleNode("Conventions");
+
+        //    foreach (XmlNode child in conventionsNode.ChildNodes)
+        //    {
+        //        if (child.NodeType == XmlNodeType.Comment) continue;
+        //    }
+        //}
+
         public virtual string GetChildValue(XmlNode node, string name, bool mandatory = false)
         {
             try
@@ -38,6 +48,30 @@ namespace QLRData
                 if (mandatory) throw ex;
                 else return string.Empty;
             }            
+        }
+
+        public virtual double GetChildValueAsDouble(XmlNode node, string name, bool mandatory = false)
+        {
+            string s = GetChildValue(node, name, mandatory);
+            return s == "" ? 0.0 : Parsers.ParseDouble(s);
+        }
+
+        public virtual int GetChildValueAsInt(XmlNode node, string name, bool mandatory = false)
+        {
+            string s = GetChildValue(node, name, mandatory);
+            return s == "" ? 0 : Parsers.ParseInteger(s);
+        }
+
+        public virtual bool GetChildValueAsBool(XmlNode node, string name, bool mandatory = false)
+        {
+            string s = GetChildValue(node, name, mandatory);
+            return s == "" ? true : Parsers.ParseBool(s); 
+        }
+
+        public void CheckNode(XmlNode node, string expectedName)
+        {
+            QLNet.Utils.QL_REQUIRE(node != null, () => "XML node is NULL (expected " + expectedName + ")");
+            QLNet.Utils.QL_REQUIRE(node.Name == expectedName, () => "XML node name " + node.Name + " does not match exptected name " + expectedName);
         }
     }
 }
