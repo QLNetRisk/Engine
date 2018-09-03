@@ -34,7 +34,7 @@ namespace QLRData
         }
 
         /// <summary>
-        /// Constructor
+        /// Index based constructor
         /// </summary>
         /// <param name="id"></param>
         /// <param name="index"></param>
@@ -44,6 +44,15 @@ namespace QLRData
             _indexBased = true;
         }
 
+        /// <summary>
+        /// Detailed constructor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="calendar"></param>
+        /// <param name="convention"></param>
+        /// <param name="eom"></param>
+        /// <param name="dayCounter"></param>
+        /// <param name="settlementDays"></param>
         public DepositConvention(string id, string calendar, string convention, string eom, string dayCounter, string settlementDays) : base(id, Type.Deposit)
         {            
             _indexBased = false;

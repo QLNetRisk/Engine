@@ -73,10 +73,10 @@ namespace QLRData
                 //{
                 //    convention.reset(new OisConvention());
                 //}
-                //else if (childName == "Swap")
-                //{
-                //    convention.reset(new IRSwapConvention());
-                //}
+                else if (childName == "Swap")
+                {
+                    convention = new IRSwapConvention();
+                }
                 //else if (childName == "AverageOIS")
                 //{
                 //    convention.reset(new AverageOisConvention());

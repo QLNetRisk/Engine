@@ -9,6 +9,74 @@ namespace QLRData
 {
     public static class Parsers
     {
+        public static IborIndex ParseIborIndex(string s, Handle<YieldTermStructure> h = null)
+        {
+            List<string> tokens = s.Split('-').ToList();            
+
+            QLNet.Utils.QL_REQUIRE(tokens.Count == 2 || tokens.Count == 3, () => "Two or three tokens required in " + s + ": CCY-INDEX or CCY-INDEX-TERM");
+
+            Period p = new Period();
+            if (tokens.Count == 3)
+            {
+                //p = Parsers.ParsePeriod(tokens[2]);
+            }                
+            else
+            {
+                p = new Period(1, TimeUnit.Days); // TODO: Verify!
+            }                
+
+            Dictionary<string, IborIndexParser> m = new Dictionary<string, IborIndexParser>()
+                {{"EUR-EONIA", new IborIndexParserOIS<Eonia>()},
+                {"GBP-SONIA", new IborIndexParserOIS<Sonia>()},
+                //{"JPY-TONAR", new IborIndexParserOIS<Tonar>()},
+                //{"CHF-TOIS", new IborIndexParserOIS<CHFTois>()},
+                {"USD-FedFunds", new IborIndexParserOIS<FedFunds>()},
+                //{"CAD-CORRA", new IborIndexParserOIS<CORRA>()},
+                //{"AUD-BBSW", new IborIndexParserWithPeriod<AUDbbsw>()},
+                {"AUD-LIBOR", new IborIndexParserWithPeriod<AUDLibor>()},
+                {"EUR-EURIBOR", new IborIndexParserWithPeriod<Euribor>()},
+                {"EUR-EURIB", new IborIndexParserWithPeriod<Euribor>()},
+                {"CAD-CDOR", new IborIndexParserWithPeriod<Cdor>()},
+                {"CAD-BA", new IborIndexParserWithPeriod<Cdor>()},
+                //{"CZK-PRIBOR", new IborIndexParserWithPeriod<CZKPribor>()},
+                {"EUR-LIBOR", new IborIndexParserWithPeriod<EURLibor>()},
+                {"USD-LIBOR", new IborIndexParserWithPeriod<USDLibor>()},
+                {"GBP-LIBOR", new IborIndexParserWithPeriod<GBPLibor>()},
+                {"JPY-LIBOR", new IborIndexParserWithPeriod<JPYLibor>()},
+                {"JPY-TIBOR", new IborIndexParserWithPeriod<Tibor>()},
+                {"CAD-LIBOR", new IborIndexParserWithPeriod<CADLibor>()},
+                {"CHF-LIBOR", new IborIndexParserWithPeriod<CHFLibor>()},
+                {"SEK-LIBOR", new IborIndexParserWithPeriod<SEKLibor>()},
+                //{"SEK-STIBOR", new IborIndexParserWithPeriod<SEKStibor>()},
+                //{"NOK-NIBOR", new IborIndexParserWithPeriod<NOKNibor>()},
+                //{"HKD-HIBOR", new IborIndexParserWithPeriod<HKDHibor>()},
+                //{"SGD-SIBOR", new IborIndexParserWithPeriod<SGDSibor>()},
+                //{"SGD-SOR", new IborIndexParserWithPeriod<SGDSor>()},
+                //{"DKK-CIBOR", new IborIndexParserWithPeriod<DKKCibor>()},
+                {"DKK-LIBOR", new IborIndexParserWithPeriod<DKKLibor>()},
+                //{"HUF-BUBOR", new IborIndexParserWithPeriod<HUFBubor>()},
+                //{"IDR-IDRFIX", new IborIndexParserWithPeriod<IDRIdrfix>()},
+                //{"INR-MIFOR", new IborIndexParserWithPeriod<INRMifor>()},
+                //{"MXN-TIIE", new IborIndexParserWithPeriod<MXNTiie>()},
+                //{"PLN-WIBOR", new IborIndexParserWithPeriod<PLNWibor>()},
+                //{"SKK-BRIBOR", new IborIndexParserWithPeriod<SKKBribor>()},
+                //{"NZD-BKBM", new IborIndexParserWithPeriod<NZDBKBM>()},
+                //{"TWD-TAIBOR", new IborIndexParserWithPeriod<TWDTaibor>()},
+                //{"MYR-KLIBOR", new IborIndexParserWithPeriod<MYRKlibor>()},
+                //{"KRW-KORIBOR", new IborIndexParserWithPeriod<KRWKoribor>()},
+                {"ZAR-JIBAR", new IborIndexParserWithPeriod<Jibar>()}};
+
+            if (m.ContainsKey(s))
+            {
+                return m[s].Build(p, h);
+            }
+            else
+            {
+                QLNet.Utils.QL_FAIL("parseIborIndex \"" + s + "\" not recognized");
+                return null;
+            }
+        }
+
         public static Currency ParseCurrency(string s)
         {
             //Dictionary<string, Currency> m = new Dictionary<string, Currency>
