@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CashFlows\SubPeriodsCoupon.cs" />
     <Compile Include="Instruments\FxForward.cs" />
     <Compile Include="Methods\MultiPathGeneratorBase.cs" />
     <Compile Include="PricingEngines\Discountingfxforwardengine.cs" />

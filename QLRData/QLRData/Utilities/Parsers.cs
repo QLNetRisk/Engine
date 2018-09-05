@@ -9,6 +9,11 @@ namespace QLRData
 {
     public static class Parsers
     {
+        public static Period ParsePeriod(string s)
+        {
+            return PeriodParser.Parse(s);
+        }
+
         public static IborIndex ParseIborIndex(string s, Handle<YieldTermStructure> h = null)
         {
             List<string> tokens = s.Split('-').ToList();            
@@ -18,7 +23,7 @@ namespace QLRData
             Period p = new Period();
             if (tokens.Count == 3)
             {
-                //p = Parsers.ParsePeriod(tokens[2]);
+                p = ParsePeriod(tokens[2]);
             }                
             else
             {
@@ -77,6 +82,35 @@ namespace QLRData
             }
         }
 
+        public static DateGeneration.Rule ParseDateGenerationRule(string s)
+        {
+            Dictionary<string, DateGeneration.Rule> m = new Dictionary<string, DateGeneration.Rule>
+            {
+                { "Backward", DateGeneration.Rule.Backward},
+                { "Forward", DateGeneration.Rule.Forward},
+                { "Zero", DateGeneration.Rule.Zero},
+                { "ThirdWednesday", DateGeneration.Rule.ThirdWednesday},
+                { "Twentieth", DateGeneration.Rule.Twentieth},
+                { "TwentiethIMM", DateGeneration.Rule.TwentiethIMM},
+                { "OldCDS", DateGeneration.Rule.OldCDS},
+                { "CDS2015", DateGeneration.Rule.CDS2015},
+                { "CDS", DateGeneration.Rule.CDS}
+            };
+
+            if (m.ContainsKey(s)) return m[s];
+            else
+            {
+                // fall back for CDS2015
+                if (s == "CDS2015")
+                {
+                    //ALOG("Date Generation Rule CDS2015 replaced with CDS because QuantLib Version is < 1.10");
+                    return DateGeneration.Rule.CDS;
+                }
+                Utils.QL_FAIL("Date Generation Rule " + s + " not recognized");
+                throw new Exception();
+            }
+        }
+
         public static Currency ParseCurrency(string s)
         {
             //Dictionary<string, Currency> m = new Dictionary<string, Currency>
@@ -120,7 +154,7 @@ namespace QLRData
             else
             {
                 QLNet.Utils.QL_FAIL("Currency " + s + " not recognized");
-                return null;
+                throw new Exception();
             }
         }
 
@@ -284,7 +318,7 @@ namespace QLRData
                 //calendarNames.erase(std::remove(calendarNames.begin(), calendarNames.end(), "JoinHolidays"), calendarNames.end());            
                 //calendarNames.erase(std::remove(calendarNames.begin(), calendarNames.end(), "JoinBusinessDays"), calendarNames.end());
                 //calendarNames.erase(std::remove(calendarNames.begin(), calendarNames.end(), ""), calendarNames.end());
-                QLNet.Utils.QL_REQUIRE(calendarNames.Count > 1 && calendarNames.Count <= 4, () => "Cannot convert " + s + " to Calendar");
+                Utils.QL_REQUIRE(calendarNames.Count > 1 && calendarNames.Count <= 4, () => "Cannot convert " + s + " to Calendar");
 
                 // Populate a vector of calendars.
                 List<Calendar> calendars = new List<Calendar>();
@@ -311,7 +345,7 @@ namespace QLRData
                         return new JointCalendar(calendars[0], calendars[1], calendars[2], calendars[3]);
                     default:
                         QLNet.Utils.QL_FAIL("Cannot convert " + s + " to Calendar");
-                        return null;
+                        throw new Exception();
                 }
             }            
         }
@@ -346,8 +380,8 @@ namespace QLRData
             }
             else
             {
-                QLNet.Utils.QL_FAIL("Cannot convert " + s + " to BusinessDayConvention");
-                return BusinessDayConvention.Following;
+                Utils.QL_FAIL("Cannot convert " + s + " to BusinessDayConvention");
+                throw new Exception();
             }
         }
 
@@ -401,8 +435,8 @@ namespace QLRData
             }
             else
             {
-                QLNet.Utils.QL_FAIL("DayCounter " + s + " not recognized");
-                return new Actual360();
+                Utils.QL_FAIL("DayCounter " + s + " not recognized");
+                throw new Exception();
             }
         }
 
@@ -420,8 +454,8 @@ namespace QLRData
             }
             else
             {
-                QLNet.Utils.QL_FAIL("Compounding \"" + s + "\" not recognized");
-                return Compounding.Continuous;
+                Utils.QL_FAIL("Compounding \"" + s + "\" not recognized");
+                throw new Exception();
             }
         }
 
@@ -452,8 +486,8 @@ namespace QLRData
             }
             else
             {
-                QLNet.Utils.QL_FAIL("Frequency \"" + s + "\" not recognized");
-                return Frequency.Annual;
+                Utils.QL_FAIL("Frequency \"" + s + "\" not recognized");
+                throw new Exception();
             }
         }
     }

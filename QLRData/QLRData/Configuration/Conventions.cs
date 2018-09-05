@@ -61,14 +61,14 @@ namespace QLRData
                 {
                     convention = new DepositConvention();
                 }
-                //else if (childName == "Future")
-                //{
-                //    convention.reset(new FutureConvention());
-                //}
-                //else if (childName == "FRA")
-                //{
-                //    convention.reset(new FraConvention());
-                //}
+                else if (childName == "Future")
+                {
+                    convention = new FutureConvention();
+                }
+                else if (childName == "FRA")
+                {
+                    convention = new FraConvention();
+                }
                 //else if (childName == "OIS")
                 //{
                 //    convention.reset(new OisConvention());

@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="Configuration\Convention.cs" />
     <Compile Include="Configuration\Conventions.cs" />
+    <Compile Include="Configuration\OisConvention.cs" />
+    <Compile Include="Configuration\FutureConvention.cs" />
+    <Compile Include="Configuration\FraConvention.cs" />
     <Compile Include="Configuration\IRSwapConvention.cs" />
     <Compile Include="Configuration\DepositConvention.cs" />
     <Compile Include="Configuration\FXConvention.cs" />
