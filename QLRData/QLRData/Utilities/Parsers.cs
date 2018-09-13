@@ -71,9 +71,10 @@ namespace QLRData
                 //{"KRW-KORIBOR", new IborIndexParserWithPeriod<KRWKoribor>()},
                 {"ZAR-JIBAR", new IborIndexParserWithPeriod<Jibar>()}};
 
-            if (m.ContainsKey(s))
+            string key = tokens[0] + "-" + tokens[1];
+            if (m.ContainsKey(key))
             {
-                return m[s].Build(p, h);
+                return m[key].Build(p, h);
             }
             else
             {

@@ -36,7 +36,18 @@ namespace QLRData
 
         }
         
-        
+        /// <summary>
+        /// Detailed constructor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="fixedCalendar"></param>
+        /// <param name="fixedFrequency"></param>
+        /// <param name="fixedConvention"></param>
+        /// <param name="fixedDayCounter"></param>
+        /// <param name="index"></param>
+        /// <param name="hasSubPeriod"></param>
+        /// <param name="floatFrequency"></param>
+        /// <param name="subPeriodCouponType"></param>
         public IRSwapConvention(string id, string fixedCalendar, string fixedFrequency, 
             string fixedConvention, string fixedDayCounter, string index, 
             bool hasSubPeriod = false, string floatFrequency = "",

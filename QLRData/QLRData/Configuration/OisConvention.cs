@@ -87,7 +87,7 @@ namespace QLRData
             _fixedFrequency = _strFixedFrequency == string.Empty ? Frequency.Annual : Parsers.ParseFrequency(_strFixedFrequency);
             _fixedConvention = _strFixedConvention == string.Empty ? BusinessDayConvention.Following : Parsers.ParseBusinessDayConvention(_strFixedConvention);
             _fixedPaymentConvention = _strFixedPaymentConvention == string.Empty ? BusinessDayConvention.Following : Parsers.ParseBusinessDayConvention(_strFixedPaymentConvention);        
-            _rule = _strRule == string.Empty ? DateGeneration.Rule.Backward : Parsers.ParseDateGenerationRule(_strRule);
+            //_rule = _strRule == string.Empty ? DateGeneration.Rule.Backward : Parsers.ParseDateGenerationRule(_strRule);
         }
 
         

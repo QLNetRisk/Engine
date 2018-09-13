@@ -69,10 +69,10 @@ namespace QLRData
                 {
                     convention = new FraConvention();
                 }
-                //else if (childName == "OIS")
-                //{
-                //    convention.reset(new OisConvention());
-                //}
+                else if (childName == "OIS")
+                {
+                    convention = new OisConvention();
+                }
                 else if (childName == "Swap")
                 {
                     convention = new IRSwapConvention();
@@ -126,7 +126,7 @@ namespace QLRData
                 }
                 catch (Exception ex)
                 {
-                    QLNet.Utils.QL_FAIL("Exception parsing convention XML Node (id = " + id + ") : " + ex.ToString());
+                    //Utils.QL_FAIL("Exception parsing convention XML Node (id = " + id + ") : " + ex.ToString());
                     //WLOG("Exception parsing convention " "XML Node (id = " << id << ") : " << e.what());
                 }
             }

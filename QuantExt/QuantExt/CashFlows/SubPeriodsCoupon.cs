@@ -43,9 +43,29 @@ namespace QuantExt
                                .withCalendar(index.fixingCalendar())
                                .withConvention(convention)
                                .withTerminationDateConvention(convention)
-                               .backwards();
+                               .backwards().value();
             _valueDates = sch.dates();
-            //QL_ENSURE(valueDates_.size() >= 2, "Degenerate schedule.");
+            Utils.QL_REQUIRE(_valueDates.Count >= 2, () => "Degenerate schedule.");
+
+            // Populate the fixing dates.
+            _numPeriods = _valueDates.Count - 1;
+            if (index.fixingDays() == 0)
+            {
+                _fixingDates = new List<Date>{ _valueDates.First(), _valueDates.Last() - 1};
+            }
+            else
+            {
+                _fixingDates.Resize(_numPeriods);
+                for (int i = 0; i < _numPeriods; ++i)
+                    _fixingDates[i] = index.fixingDate(_valueDates[i]);
+            }
+
+            // Populate the accrual periods.
+            _accrualFractions.Resize(_numPeriods);
+            for (int i = 0; i < _numPeriods; ++i)
+            {
+                _accrualFractions[i] = dayCounter.yearFraction(_valueDates[i], _valueDates[i + 1]);
+            }
         }
 
 
