@@ -11,8 +11,6 @@ namespace QLRData
     {
         public abstract List<MarketDatum> LoadQuotes(Date d);
         public abstract MarketDatum Get(string name, Date d);
-        //public abstract List<Fixing>
-    }
-
-
+        public abstract List<Fixing> LoadFixings();
+    }    
 }

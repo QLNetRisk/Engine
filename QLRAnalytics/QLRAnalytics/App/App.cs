@@ -312,7 +312,11 @@ namespace QLRAnalytics
             {
                 string inputPath = _parameters.Get("setup", "inputPath");
                 string marketConfigFile = inputPath + "/" + _parameters.Get("setup", "marketConfigFile");
-                //_marketParameters
+                _marketParameters.FromFile(marketConfigFile);
+            }
+            else
+            {
+                //WLOG("No market parameters loaded");
             }
         }
         /// <summary>
@@ -320,7 +324,41 @@ namespace QLRAnalytics
         /// </summary>
         public void BuildMarket()
         {
+            if (_parameters.Has("setup", "marketDataFile") && _parameters.Get("setup", "marketDataFile") != "")
+            {
+                /*******************************
+                 * Market and fixing data loader
+                 */
+                _out.Append(("Market data loader... ").PadRight(_tab)); 
+                string inputPath = _parameters.Get("setup", "inputPath");
+                string marketFile = inputPath + "/" + _parameters.Get("setup", "marketDataFile");
+                string fixingFile = inputPath + "/" + _parameters.Get("setup", "fixingDataFile");
+                string implyTodaysFixingsString = _parameters.Get("setup", "implyTodaysFixings");
+                bool implyTodaysFixings = Parsers.ParseBool(implyTodaysFixingsString);
+                //CSVLoader loader(marketFile, fixingFile, implyTodaysFixings);
+                _out.Append("OK" + _endl);
 
+                /**********************
+                 * Curve configurations
+                 */
+                //CurveConfigurations curveConfigs;
+                if (_parameters.Has("setup", "curveConfigFile") && _parameters.Get("setup", "curveConfigFile") != "")
+                {
+                    _out.Append(("Curve configuration... ").PadRight(_tab));
+                    string curveConfigFile = inputPath + "/" + _parameters.Get("setup", "curveConfigFile");
+                    //curveConfigs.fromFile(curveConfigFile);
+                    _out.Append("OK" + _endl);
+                }
+                else
+                {
+                    //WLOG("No curve configurations loaded from file");
+                }
+                //_market = new TodaysMarket(_asof, _marketParameters, loader, curveConfigs, _conventions);
+            }
+            else
+            {
+                //WLOG("No market data loaded from file");
+            }
         }
 
         /// <summary>

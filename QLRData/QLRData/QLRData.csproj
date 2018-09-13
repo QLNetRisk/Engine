@@ -53,8 +53,10 @@
     <Compile Include="Configuration\FXConvention.cs" />
     <Compile Include="Configuration\ZeroRateConvention.cs" />
     <Compile Include="MarketData\CurveSpec.cs" />
+    <Compile Include="MarketData\Fixing.cs" />
     <Compile Include="MarketData\FxSpot.cs" />
     <Compile Include="MarketData\FxTriangulation.cs" />
+    <Compile Include="MarketData\CsvLoader.cs" />
     <Compile Include="MarketData\Loader.cs" />
     <Compile Include="MarketData\Market.cs" />
     <Compile Include="MarketData\MarketConfiguration.cs" />
