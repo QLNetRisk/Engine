@@ -43,10 +43,10 @@ namespace QLRData
         public override void FromXML(XmlNode node)
         {            
             // TODO: Implement correctly
-            XmlNode conventionsNode = node.SelectSingleNode("Conventions");
-            CheckNode(conventionsNode, "Conventions");
+            //XmlNode conventionsNode = node.SelectSingleNode("Conventions");
+            CheckNode(node, "Conventions");
 
-            foreach (XmlNode child in conventionsNode.ChildNodes)
+            foreach (XmlNode child in node.ChildNodes)
             {
                 if (child.NodeType == XmlNodeType.Comment) continue;
 

@@ -96,6 +96,59 @@ namespace QLRData
         }
     }
 
+    public class ZeroQuote: MarketDatum
+    {
+        private string _ccy;
+        private Date _date;
+        private DayCounter _dayCounter;
+        private Period _tenor;
+        private bool _tenorBased;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="asofDate"></param>
+        /// <param name="name"></param>
+        /// <param name="quoteType"></param>
+        /// <param name="ccy"></param>
+        /// <param name="date"></param>
+        /// <param name="dayCounter"></param>
+        /// <param name="tenor"></param>
+        public ZeroQuote(double value, Date asofDate, string name, QuoteType quoteType, string ccy, Date date, DayCounter dayCounter, Period tenor = null)
+        : base(value, asofDate, name, quoteType, InstrumentType.ZERO)
+        {
+            _ccy = ccy;
+            _date = date;
+            _dayCounter = dayCounter;
+            _tenor = tenor;
+            // Minimal adjustment in the absence of a calendar
+            Utils.QL_REQUIRE(date != new Date() || tenor != null, () => "ZeroQuote: either date or period is required");
+            _tenorBased = (_date == new Date());
+        }
+
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Date Date()
+        {
+            return _date;
+        }
+        public DayCounter DayCounter()
+        {
+            return _dayCounter;
+        }
+        public Period Tenor()
+        {
+            return _tenor;
+        }
+        public bool TenorBased()
+        {
+            return _tenorBased;
+        }
+    }
+
     public class FXSpotQuote : MarketDatum
     {
         private string _unitCcy;

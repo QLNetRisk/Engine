@@ -29,5 +29,4 @@ namespace QLRData
             return (T)Activator.CreateInstance(typeof(T), p, h);
         }
     }
-
 }

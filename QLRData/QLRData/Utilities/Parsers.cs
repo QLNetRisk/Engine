@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Global = System.Globalization;
 using QLNet;
 
 namespace QLRData
@@ -159,9 +160,17 @@ namespace QLRData
             }
         }
 
+        public static Date ParseDateExact(string s, string format)
+        {
+            DateTime date = DateTime.ParseExact(s, "yyyyMMdd", Global.CultureInfo.InvariantCulture);
+
+            return date;
+        }
+
         public static Date ParseDate(string s)
         {
             DateTime date = new DateTime();
+
             if (DateTime.TryParse(s, out date)) return date;            
             else
             {
@@ -489,6 +498,24 @@ namespace QLRData
             {
                 Utils.QL_FAIL("Frequency \"" + s + "\" not recognized");
                 throw new Exception();
+            }
+        }
+
+        public static void ParseDateOrPeriod(string s, Date d, Period p, bool isDate)
+        {
+            Utils.QL_REQUIRE(s != string.Empty, () => "Cannot parse empty string as date or period");
+            string c = s + "1"; // (1, s.back());
+            bool isPeriod = c.IndexOfAny(new char[] { 'D', 'd', 'W', 'w', 'M', 'm', 'Y', 'y' }) != 0;
+            if (isPeriod)
+            {
+                p = ParsePeriod(s);
+                isDate = false;
+            }
+            else
+            {
+                d = ParseDate(s);
+                Utils.QL_REQUIRE(d != new Date(), () => "Cannot parse \"" + s + "\" as date");
+                isDate = true;
             }
         }
     }

@@ -16,6 +16,13 @@ namespace QLRData
         // Fixing amount
         public double fixing { get; set; }
 
+        public Fixing(Date date, string name, double fixing)
+        {
+            this.date = date;
+            this.name = name;
+            this.fixing = fixing;
+        }
+
 //        void applyFixings(const vector<Fixing>& fixings, const data::Conventions& conventions) {
 //    Size count = 0;
 //        map<string, boost::shared_ptr<Index>> cache;

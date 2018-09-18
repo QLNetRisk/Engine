@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace QLRData
 {
     public class TodaysMarketParameters : XmlSerializable
     {
+
+
         private Dictionary<string, MarketConfiguration> _configurations = new Dictionary<string, MarketConfiguration>();
         private Dictionary<MarketObject, Dictionary<string, Dictionary<string, string>>> _marketObjects = new Dictionary<MarketObject, Dictionary<string, Dictionary<string, string>>>();
 
@@ -30,13 +33,15 @@ namespace QLRData
                                                     "InflationCapFloorPriceSurfaces",
                                                     "EquityCurves", "EquityVolatilities",
                                                     "Securities"};
-        //private readonly List<Tuple<string, string>> marketObjectXMLNamesSingle = new List<Tuple<string, string>>()
-        //                                            {"DiscountingCurve", "currency"}, {"YieldCurve", "name"}, {"Index", "name"}, {"SwapIndex", "name"},
-        //                                            {"FxSpot", "pair"}, {"FxVolatility", "pair"}, {"SwaptionVolatility", "currency"},
-        //                                            {"DefaultCurve", "name"}, {"CDSVolatility", "name"}, {"BaseCorrelation", "name"},
-        //                                            {"CapFloorVolatility", "currency"}, {"ZeroInflationIndexCurve", "name"},
-        //                                            {"YYInflationIndexCurve", "name"}, {"InflationCapFloorPriceSurface", "name"},
-        //                                            {"EquityCurve", "name"}, {"EquityVolatility", "name"}, {"Security", "name"}};
+        private readonly OrderedDictionary marketObjectXMLNamesSingle = new OrderedDictionary(){
+                                                    { "DiscountingCurve", "currency" },
+                                                    {"YieldCurve", "name"},
+                                                    {"Index", "name"}, {"SwapIndex", "name"},
+                                                    {"FxSpot", "pair"}, {"FxVolatility", "pair"}, {"SwaptionVolatility", "currency"},
+                                                    {"DefaultCurve", "name"}, {"CDSVolatility", "name"}, {"BaseCorrelation", "name"},
+                                                    {"CapFloorVolatility", "currency"}, {"ZeroInflationIndexCurve", "name"},
+                                                    {"YYInflationIndexCurve", "name"}, {"InflationCapFloorPriceSurface", "name"},
+                                                    {"EquityCurve", "name"}, {"EquityVolatility", "name"}, {"Security", "name"}};
 
         /// <summary>
         /// Default constructor
@@ -46,75 +51,96 @@ namespace QLRData
 
         }
 
-        //public override void FromXML(XmlNode node)
-        //{
-        //    // clear data members
-        //    _configurations.Clear();
-        //    _marketObjects.Clear();
+        public override void FromXML(XmlNode node)
+        {            
+            // TODO: Implement differently?
+            String[] keys = new String[marketObjectXMLNamesSingle.Keys.Count];
+            String[] values = new String[marketObjectXMLNamesSingle.Values.Count];
+            marketObjectXMLNamesSingle.Keys.CopyTo(keys, 0);
+            marketObjectXMLNamesSingle.Values.CopyTo(values, 0);
 
-        //    // add default configuration (may be overwritten below)
-        //    MarketConfiguration defaultConfig = new MarketConfiguration();
-        //    AddConfiguration(Market.DefaultConfiguration, defaultConfig);
+            // clear data members
+            _configurations.Clear();
+            _marketObjects.Clear();
 
-        //    // fill data from XML
-        //    CheckNode(node, "TodaysMarket");
-        //    XmlNode n = GetChildNode(node);
-        //    while (n)
-        //    {
-        //        if (XMLUtils::getNodeName(n) == "Configuration")
-        //        {
-        //            MarketConfiguration tmp;
-        //            for (Size i = 0; i < numberOfMarketObjects; ++i)
-        //            {
-        //                tmp.setId(MarketObject(i), XMLUtils::getChildValue(n, marketObjectXMLNames[i] + "Id", false));
-        //                addConfiguration(XMLUtils::getAttribute(n, "id"), tmp);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Size i = 0;
-        //            for (; i < numberOfMarketObjects; ++i)
-        //            {
-        //                if (XMLUtils::getNodeName(n) == marketObjectXMLNames[i])
-        //                {
-        //                    string id = XMLUtils::getAttribute(n, "id");
-        //                    if (id == "")
-        //                        id = Market::defaultConfiguration;
-        //                    // The XML schema for swap indices is different ...
-        //                    if (MarketObject(i) == MarketObject::SwapIndexCurve)
-        //                    {
-        //                        vector<XMLNode*> nodes = XMLUtils::getChildrenNodes(n, marketObjectXMLNamesSingle[i].first);
-        //                        map<string, string> swapIndices;
-        //                        for (XMLNode* xn : nodes)
-        //                        {
-        //                            string name = XMLUtils::getAttribute(xn, marketObjectXMLNamesSingle[i].second);
-        //                            QL_REQUIRE(name != "", "no name given for SwapIndex");
-        //                            QL_REQUIRE(swapIndices.find(name) == swapIndices.end(),
-        //                                       "Duplicate SwapIndex found for " << name);
-        //                            string disc = XMLUtils::getChildValue(xn, "Discounting", true);
-        //                            swapIndices[name] = disc; //.emplace(name, { ibor, disc }); won't work?
-        //                        }
-        //                        addMarketObject(MarketObject::SwapIndexCurve, id, swapIndices);
+            // add default configuration (may be overwritten below)
+            MarketConfiguration defaultConfig = new MarketConfiguration();
+            AddConfiguration(Market.DefaultConfiguration, defaultConfig);
 
-        //                    }
-        //                    else
-        //                    {
-        //                        auto mp = XMLUtils::getChildrenAttributesAndValues(n, marketObjectXMLNamesSingle[i].first,
-        //                                                                           marketObjectXMLNamesSingle[i].second, false);
-        //                        Size nc = XMLUtils::getChildrenNodes(n, "").size();
-        //                        QL_REQUIRE(mp.size() == nc, "could not recognise " << (nc - mp.size()) << " sub nodes under "
-        //                                                                           << marketObjectXMLNames[i]);
-        //                        addMarketObject(MarketObject(i), id, mp);
-        //                    }
-        //                    break;
-        //                }
-        //            }
-        //            QL_REQUIRE(i < numberOfMarketObjects,
-        //                       "TodaysMarketParameters::fromXML(): node not recognized: " << XMLUtils::getNodeName(n));
-        //        }
-        //        n = XMLUtils::getNextSibling(n);
-        //    } // while(n)
-        //}
+            // fill data from XML
+            CheckNode(node, "TodaysMarket");
+            XmlNode n = GetChildNode(node, "");
+            while (n != null)
+            {
+                if (GetNodeName(n) == "Configuration")
+                {
+                    MarketConfiguration tmp = new MarketConfiguration();
+                    for (int i = 0; i < numberOfMarketObjects; ++i)
+                    {
+                        tmp.SetId((MarketObject)i, GetChildValue(n, marketObjectXMLNames[i] + "Id", false));
+                        AddConfiguration(GetAttribute(n, "id"), tmp);
+                    }
+                }
+                else
+                {
+                    int i = 0;
+                    for (; i < numberOfMarketObjects; ++i)
+                    {
+                        if (GetNodeName(n) == marketObjectXMLNames[i])
+                        {
+                            string id = GetAttribute(n, "id");
+                            if (id == "")
+                                id = Market.DefaultConfiguration;
+                            // The XML schema for swap indices is different ...
+                            if ((MarketObject)i == MarketObject.SwapIndexCurve)
+                            {
+                                List<XmlNode> nodes = GetChildrenNodes(n, keys[i]);
+                                Dictionary<string, string> swapIndices = new Dictionary<string, string>();
+                                foreach (XmlNode xn in nodes)
+                                {
+                                    string name = GetAttribute(xn, values[i]);
+                                    Utils.QL_REQUIRE(name != "", () => "no name given for SwapIndex");
+                                    Utils.QL_REQUIRE(!swapIndices.ContainsKey(name), () => "Duplicate SwapIndex found for " + name);
+
+                                    string disc = GetChildValue(xn, "Discounting", true);
+                                    swapIndices[name] = disc; //.emplace(name, { ibor, disc }); won't work?
+                                }
+                                AddMarketObject(MarketObject.SwapIndexCurve, id, swapIndices);
+
+                            }
+                            else
+                            {
+                               
+                                try
+                                {
+                                    var mp = GetChildrenAttributesAndValues(n, keys[i], values[i], false);
+
+                                    int nc = GetChildrenNodes(n, "").Count;
+                                    Utils.QL_REQUIRE(mp.Count == nc, () => "could not recognise " + (nc - mp.Count) + " sub nodes under " + marketObjectXMLNames[i]);
+
+                                    AddMarketObject((MarketObject)i, id, mp);
+                                }
+                                catch(Exception ex)
+                                {
+                                    var debug = "";
+                                }                                                                
+                            }
+                            break;
+                        }
+                    }
+                    Utils.QL_REQUIRE(i < numberOfMarketObjects, () => "TodaysMarketParameters.FromXML(): node not recognized: " + GetNodeName(n));
+
+                }
+                try
+                {
+                    n = GetNextSibling(n);
+                }
+                catch(Exception ex)
+                {
+                    var debug = "";
+                }
+            }
+        }
 
         public override void ToXML(XmlDocument doc)
         {
@@ -180,7 +206,29 @@ namespace QLRData
             return _configurations[configuration].ToString(); // (o);
         }
 
-        private void CurveSpecs(Dictionary<string, Dictionary<string, string>> m, string id, List<string> specs)
+        private void AddMarketObject(MarketObject o, string id, Dictionary<string, string> assignments) 
+        {            
+            if(!_marketObjects.ContainsKey(o))
+            {
+                Dictionary<string, Dictionary<string, string>> temp = new Dictionary<string, Dictionary<string, string>>();
+                temp.Add(id, assignments);
+                _marketObjects.Add(o, temp);
+            }
+            else
+            {
+                if(!_marketObjects[o].ContainsKey(id))
+                {
+                    _marketObjects[o].Add(id, assignments);
+                }
+            }
+            //_marketObjects[o][id] = assignments;
+            foreach (KeyValuePair<string, string> s in assignments)
+            {
+                //DLOG("TodaysMarketParameters, add market objects of type " + o + ": " + id + " " + s.Key + " " + s.Value);
+            }
+        }
+
+    private void CurveSpecs(Dictionary<string, Dictionary<string, string>> m, string id, List<string> specs)
         {
             // extract all the curve specs            
             if (m.ContainsKey(id))
@@ -190,12 +238,7 @@ namespace QLRData
                     specs.Add(kv.Value);
                     //DLOG("Add spec " << kv.second);
                 }
-            }
-        }
-
-        public override void FromXML(XmlNode node)
-        {
-            throw new NotImplementedException();
+            }                
         }
     }
 }

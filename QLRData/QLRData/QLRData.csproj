@@ -45,12 +45,16 @@
   <ItemGroup>
     <Compile Include="Configuration\Convention.cs" />
     <Compile Include="Configuration\Conventions.cs" />
+    <Compile Include="Configuration\CurveConfig.cs" />
+    <Compile Include="Configuration\CurveConfigurations.cs" />
     <Compile Include="Configuration\OisConvention.cs" />
     <Compile Include="Configuration\FutureConvention.cs" />
     <Compile Include="Configuration\FraConvention.cs" />
     <Compile Include="Configuration\IRSwapConvention.cs" />
     <Compile Include="Configuration\DepositConvention.cs" />
     <Compile Include="Configuration\FXConvention.cs" />
+    <Compile Include="Configuration\YieldCurveConfig.cs" />
+    <Compile Include="Configuration\YieldCurveSegment.cs" />
     <Compile Include="Configuration\ZeroRateConvention.cs" />
     <Compile Include="MarketData\CurveSpec.cs" />
     <Compile Include="MarketData\Fixing.cs" />
@@ -75,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DateParsers.cs" />
     <Compile Include="Utilities\IndexParser.cs" />
+    <Compile Include="Utilities\MarketDatumParser.cs" />
     <Compile Include="Utilities\Parsers.cs" />
     <Compile Include="Utilities\XmlSerializable.cs" />
   </ItemGroup>

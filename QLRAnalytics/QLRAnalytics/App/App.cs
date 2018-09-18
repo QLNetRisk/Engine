@@ -31,7 +31,7 @@ namespace QLRAnalytics
         protected Market _market;
         protected Portfolio _portfolio = new Portfolio();
         protected Conventions _conventions = new Conventions();
-        protected TodaysMarketParameters _marketParameters;
+        protected TodaysMarketParameters _marketParameters = new TodaysMarketParameters();
 
         protected ScenarioSimMarket _simMarket;
         protected Portfolio _simPortfolio;
@@ -335,13 +335,13 @@ namespace QLRAnalytics
                 string fixingFile = inputPath + "/" + _parameters.Get("setup", "fixingDataFile");
                 string implyTodaysFixingsString = _parameters.Get("setup", "implyTodaysFixings");
                 bool implyTodaysFixings = Parsers.ParseBool(implyTodaysFixingsString);
-                //CSVLoader loader(marketFile, fixingFile, implyTodaysFixings);
+                CsvLoader loader = new CsvLoader(marketFile, fixingFile, implyTodaysFixings);
                 _out.Append("OK" + _endl);
 
                 /**********************
                  * Curve configurations
                  */
-                //CurveConfigurations curveConfigs;
+                CurveConfigurations curveConfigs;
                 if (_parameters.Has("setup", "curveConfigFile") && _parameters.Get("setup", "curveConfigFile") != "")
                 {
                     _out.Append(("Curve configuration... ").PadRight(_tab));

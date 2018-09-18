@@ -32,7 +32,7 @@ namespace QLRData
     public class MarketConfiguration
     {
         public const int NumberOfMarketObjects = 17;
-        private Dictionary<MarketObject, string> _marketObjectIds;
+        private Dictionary<MarketObject, string> _marketObjectIds = new Dictionary<MarketObject, string>();
 
         /// <summary>
         /// Default constructor

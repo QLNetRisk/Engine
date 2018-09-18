@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text.RegularExpressions;
 using QLNet;
 
 namespace QLRData
@@ -10,7 +12,7 @@ namespace QLRData
     public class CsvLoader : Loader
     {
         private bool _implyTodaysFixings;
-        private Dictionary<Date, List<MarketDatum>> _data;
+        private Dictionary<Date, List<MarketDatum>> _data = new Dictionary<Date, List<MarketDatum>>();
         private List<Fixing> _fixings;
 
         /// <summary>
@@ -41,53 +43,64 @@ namespace QLRData
         {
             //LOG("CSVLoader loading from " << filename);
 
-            //Date today = QuantLib::Settings::instance().evaluationDate();
+            Date today = Settings.evaluationDate();
 
-            //ifstream file;
-            //file.open(filename.c_str());
-            //QL_REQUIRE(file.is_open(), "error opening file " << filename);
+            using (var reader = new StreamReader(filename))
+            {
 
-            //while (!file.eof())
-            //{
-            //    string line;
-            //    getline(file, line);
-            //    // skip blank and comment lines
-            //    if (line.size() > 0 && line[0] != '#')
-            //    {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
 
-            //        vector<string> tokens;
-            //        boost::trim(line);
-            //        boost::split(tokens, line, boost::is_any_of(",;\t "), boost::token_compress_on);
+                    if (line.Length > 0 && line[0] != '#')
+                    {
+                        line = line.Trim();
+                        string[] tokens = line.Split(new[] { " " }, StringSplitOptions.None);
+                        //string[] tokens = Regex.Split(line, ",;\t "); //line.Split(',').ToList();
 
-            //        // TODO: should we try, catch and log any invalid lines?
-            //        QL_REQUIRE(tokens.size() == 3, "Invalid CSVLoader line, 3 tokens expected " << line);
-            //        Date date = parseDate(tokens[0]);
-            //        const string&key = tokens[1];
-            //        Real value = parseReal(tokens[2]);
+                        // TODO: should we try, catch and log any invalid lines?
+                        Utils.QL_REQUIRE(tokens.ToList().Count == 3, () => "Invalid CSVLoader line, 3 tokens expected " + line);
+                        Date date = Parsers.ParseDateExact(tokens[0], "yyyyMMdd");
+                        string key = tokens[1];
+                        double value = Parsers.ParseDouble(tokens[2]);
 
-            //        if (isMarket)
-            //        {
-            //            // process market
-            //            // build market datum and add to map
-            //            try
-            //            {
-            //                data_[date].push_back(parseMarketDatum(date, key, value));
-            //                TLOG("Added MarketDatum " << data_[date].back()->name());
-            //            }
-            //            catch (std::exception&e) {
-            //                WLOG("Failed to parse MarketDatum " << key << ": " << e.what());
-            //            }
-            //            } else {
-            //                // process fixings
-            //                if (date < today || (date == today && !implyTodaysFixings_))
-            //                    fixings_.emplace_back(Fixing(date, key, value));
-            //            }
-            //        }
-            //    }
-            //    file.close();
-            //    LOG("CSVLoader completed processing " << filename);
+                        if (isMarket)
+                        {
+                            // process market
+                            // build market datum and add to map
+                            try
+                            {
+                                if(!_data.ContainsKey(date))
+                                {
+                                    List<MarketDatum> datum = new List<MarketDatum>();
+                                    datum.Add(MarketDatumParser.ParseMarketDatum(date, key, value));
+                                    _data.Add(date, datum);
+                                }
+                                else
+                                {
+                                    _data[date].Add(MarketDatumParser.ParseMarketDatum(date, key, value));
+                                }                                
+                                //TLOG("Added MarketDatum " << data_[date].back()->name());
+                            }
+                            catch (Exception e)
+                            {
+                                //WLOG("Failed to parse MarketDatum " << key << ": " << e.ToString());
+                            }
+                        }
+                        else
+                        {
+                            // process fixings
+                            if (date < today || (date == today && !_implyTodaysFixings))
+                            {
+                                _fixings.Add(new Fixing(date, key, value));
+                            }
+                        }
+                    }
+                }
+                //    LOG("CSVLoader completed processing " << filename);
             }
-
+        }
+            
         /// <summary>
         /// Load market quotes
         /// </summary>
