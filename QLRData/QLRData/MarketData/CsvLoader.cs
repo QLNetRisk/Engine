@@ -13,7 +13,7 @@ namespace QLRData
     {
         private bool _implyTodaysFixings;
         private Dictionary<Date, List<MarketDatum>> _data = new Dictionary<Date, List<MarketDatum>>();
-        private List<Fixing> _fixings;
+        private List<Fixing> _fixings = new List<Fixing>();
 
         /// <summary>
         /// Constructor
@@ -55,10 +55,16 @@ namespace QLRData
                     if (line.Length > 0 && line[0] != '#')
                     {
                         line = line.Trim();
-                        string[] tokens = line.Split(new[] { " " }, StringSplitOptions.None);
+                        string[] tokens = line.Split(new[] { " " }, StringSplitOptions.None).ToList().Where(i => i != "").ToArray();
                         //string[] tokens = Regex.Split(line, ",;\t "); //line.Split(',').ToList();
 
                         // TODO: should we try, catch and log any invalid lines?
+
+                        if(tokens.ToList().Count != 3)
+                        {
+                            var debug = "";
+                        }
+
                         Utils.QL_REQUIRE(tokens.ToList().Count == 3, () => "Invalid CSVLoader line, 3 tokens expected " + line);
                         Date date = Parsers.ParseDateExact(tokens[0], "yyyyMMdd");
                         string key = tokens[1];

@@ -9,7 +9,7 @@ namespace QLRData
 {
     public class TodaysMarket : MarketImpl
     {
-        public TodaysMarket(Date asof, TodaysMarketParameters todaysParams, Conventions conventions) : base(conventions)
+        public TodaysMarket(Date asof, TodaysMarketParameters todaysParams, Loader loader, CurveConfigurations curveConfigs, Conventions conventions) : base(conventions)
         {
             // Fixings
             // Apply them now in case a curve builder needs them
@@ -19,13 +19,12 @@ namespace QLRData
 
             // store all curves built, since they might appear in several configurations
             // and might therefore be reused
-            Dictionary<string, YieldTermStructure> requiredYieldCurves;
-            Dictionary<string, SwapIndex> requiredSwapIndices;
-            //Dictionary<string, FXSpot> requiredFxSpots;
+            Dictionary<string, YieldTermStructure> requiredYieldCurves = new Dictionary<string, YieldTermStructure>();
+            Dictionary<string, SwapIndex> requiredSwapIndices = new Dictionary<string, SwapIndex>();
+            Dictionary<string, FXSpot> requiredFxSpots = new Dictionary<string, FXSpot>();
 
             foreach (var configuration in todaysParams.Configurations())
             {
-
                 //LOG("Build objects in TodaysMarket configuration " << configuration.first);
 
                 _asof = asof;

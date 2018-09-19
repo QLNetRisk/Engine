@@ -97,13 +97,18 @@ namespace QLRData
             return res;          
         }
 
-        public virtual XmlNode GetNextSibling(XmlNode node)
+        public virtual XmlNode GetNextSibling(XmlNode node, string name)
         {
             if (node.NextSibling == null) return null;
 
             if(node.NextSibling.NodeType == XmlNodeType.Comment || node.NextSibling.NodeType == XmlNodeType.XmlDeclaration)
             {
-                return GetNextSibling(node.NextSibling);
+                return GetNextSibling(node.NextSibling, name);
+            }
+            else if(name.Length > 0)
+            {
+                if (name == node.NextSibling.Name) return node.NextSibling;
+                else return GetNextSibling(node.NextSibling, name);
             }
             else
             {

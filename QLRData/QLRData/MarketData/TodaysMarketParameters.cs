@@ -133,7 +133,7 @@ namespace QLRData
                 }
                 try
                 {
-                    n = GetNextSibling(n);
+                    n = GetNextSibling(n, "");
                 }
                 catch(Exception ex)
                 {

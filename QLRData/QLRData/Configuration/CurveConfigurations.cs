@@ -9,7 +9,7 @@ namespace QLRData
 {
     public class CurveConfigurations : XmlSerializable
     {
-        private Dictionary<string, YieldCurveConfig> _yieldCurveConfigs;
+        private Dictionary<string, YieldCurveConfig> _yieldCurveConfigs = new Dictionary<string, YieldCurveConfig>();
         //private Dictionary<string, FXVolatilityCurveConfig>> fxVolCurveConfigs_;
         //private Dictionary<string, SwaptionVolatilityCurveConfig>> swaptionVolCurveConfigs_;
         //private Dictionary<string, CapFloorVolatilityCurveConfig>> capFloorVolCurveConfigs_;
@@ -71,12 +71,53 @@ namespace QLRData
 
         public override void FromXML(XmlNode node)
         {
-            throw new NotImplementedException();
+            CheckNode(node, "CurveConfiguration");
+
+            // Load YieldCurves, FXVols, etc, etc
+            ParseNode(node, "YieldCurves", "YieldCurve", _yieldCurveConfigs);
+            //parseNode(node, "FXVolatilities", "FXVolatility", fxVolCurveConfigs_);
+            //parseNode(node, "SwaptionVolatilities", "SwaptionVolatility", swaptionVolCurveConfigs_);
+            //parseNode(node, "CapFloorVolatilities", "CapFloorVolatility", capFloorVolCurveConfigs_);
+            //parseNode(node, "DefaultCurves", "DefaultCurve", defaultCurveConfigs_);
+            //parseNode(node, "CDSVolatilities", "CDSVolatility", cdsVolCurveConfigs_);
+            //parseNode(node, "BaseCorrelations", "BaseCorrelation", baseCorrelationCurveConfigs_);
+            //parseNode(node, "EquityCurves", "EquityCurve", equityCurveConfigs_);
+            //parseNode(node, "EquityVolatilities", "EquityVolatility", equityVolCurveConfigs_);
+            //parseNode(node, "InflationCurves", "InflationCurve", inflationCurveConfigs_);
+            //parseNode(node, "InflationCapFloorPriceSurfaces", "InflationCapFloorPriceSurface",
+            //          inflationCapFloorPriceSurfaceConfigs_);
+            //parseNode(node, "Securities", "Security", securityConfigs_);
+            //parseNode(node, "FXSpots", "FXSpot", fxSpotConfigs_);
         }
 
         public override void ToXML(XmlDocument doc)
         {
             throw new NotImplementedException();
+        }
+
+        private void ParseNode<T>(XmlNode node, string parentName, string childName, Dictionary<string, T> m) where T : CurveConfig
+        {
+            XmlNode parentNode = GetChildNode(node, parentName);
+            if (parentNode != null)
+            {
+                XmlNode child = GetChildNode(parentNode, childName);
+
+                foreach (XmlNode sibling in GetNextSibling(child, childName))
+                {
+                    T curveConfig = (T)Activator.CreateInstance(typeof(T));
+                    try
+                    {
+                        curveConfig.FromXML(sibling);
+                        string id = curveConfig.CurveID();
+                        m.Add(id, curveConfig);
+                        //DLOG("Added curve config with ID = " << id);
+                    }
+                    catch (Exception ex)
+                    {
+                        //ALOG("Exception parsing curve config: " << ex.what());
+                    }
+                }
+            }
         }
     }
 }

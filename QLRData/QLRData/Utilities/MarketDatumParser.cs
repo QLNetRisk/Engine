@@ -90,7 +90,7 @@ namespace QLRData
             Period term = new Period();                                    // gets populated by parseDateOrPeriod
             Date expiryDate = new Date();                                  // gets populated by parseDateOrPeriod
             bool tmpIsDate = false;                                        // gets populated by parseDateOrPeriod
-            Parsers.ParseDateOrPeriod(token, expiryDate, term, tmpIsDate); // checks if the market string contains a date or a period
+            Parsers.ParseDateOrPeriod(token, expiryDate, term, out tmpIsDate); // checks if the market string contains a date or a period
             if (!tmpIsDate)
             {
                 expiryDate = new WeekendsOnly().adjust(asof + term);       // we have no calendar information here, so we use a generic calendar
@@ -122,29 +122,29 @@ namespace QLRData
                         Date date = new Date();
                         Period tenor = new Period();
                         bool isDate =false;
-                        Parsers.ParseDateOrPeriod(tokens[5], date, tenor, isDate);
+                        Parsers.ParseDateOrPeriod(tokens[5], date, tenor, out isDate);
                         return new ZeroQuote(value, asof, datumName, quoteType, ccy, date, dc, tenor);
                     }
 
-                //case MarketDatum.InstrumentType.DISCOUNT:
-                //    {
-                //        // DISCOUNT/RATE/EUR/EUR1D/1Y
-                //        // DISCOUNT/RATE/EUR/EUR1D/2016-12-15
-                //        QL_REQUIRE(tokens.size() == 5, "5 tokens expected in " << datumName);
-                //        const string&ccy = tokens[2];
-                //        // token 4 can be a date, or tenor
-                //        Date date = Date();
-                //        Period tenor = Period();
-                //        bool isDate;
-                //        parseDateOrPeriod(tokens[4], date, tenor, isDate);
-                //        if (!isDate)
-                //        {
-                //            // we can't assume any calendar here, so we do the minimal adjustment with a weekend only calendar
-                //            QL_REQUIRE(tenor != Period(), "neither date nor tenor recognised");
-                //            date = WeekendsOnly().adjust(asof + tenor);
-                //        }
-                //        return boost::make_shared<DiscountQuote>(value, asof, datumName, quoteType, ccy, date);
-                //    }
+                case MarketDatum.InstrumentType.DISCOUNT:
+                    {
+                        // DISCOUNT/RATE/EUR/EUR1D/1Y
+                        // DISCOUNT/RATE/EUR/EUR1D/2016-12-15
+                        Utils.QL_REQUIRE(tokens.Count == 5, () => "5 tokens expected in " + datumName);
+                        string ccy = tokens[2];
+                        // token 4 can be a date, or tenor
+                        Date date = new Date();
+                        Period tenor = new Period();
+                        bool isDate = false;
+                        Parsers.ParseDateOrPeriod(tokens[4], date, tenor, out isDate);
+                        if (!isDate)
+                        {
+                            // we can't assume any calendar here, so we do the minimal adjustment with a weekend only calendar
+                            Utils.QL_REQUIRE(tenor != null, () => "neither date nor tenor recognised");
+                            date = new WeekendsOnly().adjust(asof + tenor);
+                        }                        
+                        return new DiscountQuote(value, asof, datumName, quoteType, ccy, date);
+                    }
 
                 //case MarketDatum.InstrumentType.MM:
                 //    {
@@ -165,14 +165,14 @@ namespace QLRData
                 //        return boost::make_shared<MMFutureQuote>(value, asof, datumName, quoteType, ccy, expiry, contract, term);
                 //    }
 
-                //case MarketDatum.InstrumentType.FRA:
-                //    {
-                //        QL_REQUIRE(tokens.size() == 5, "5 tokens expected in " << datumName);
-                //        const string&ccy = tokens[2];
-                //        Period fwdStart = parsePeriod(tokens[3]);
-                //        Period term = parsePeriod(tokens[4]);
-                //        return boost::make_shared<FRAQuote>(value, asof, datumName, quoteType, ccy, fwdStart, term);
-                //    }
+                case MarketDatum.InstrumentType.FRA:
+                    {
+                        Utils.QL_REQUIRE(tokens.Count == 5, () => "5 tokens expected in " + datumName);
+                        string ccy = tokens[2];
+                        Period fwdStart = Parsers.ParsePeriod(tokens[3]);
+                        Period term = Parsers.ParsePeriod(tokens[4]);                        
+                        return new FRAQuote(value, asof, datumName, quoteType, ccy, fwdStart, term);
+                    }
 
                 //case MarketDatum.InstrumentType.IMM_FRA:
                 //    {
@@ -186,15 +186,15 @@ namespace QLRData
                 //        return boost::make_shared<ImmFraQuote>(value, asof, datumName, quoteType, ccy, m1, m2);
                 //    }
 
-                //case MarketDatum.InstrumentType.IR_SWAP:
-                //    {
-                //        QL_REQUIRE(tokens.size() == 6, "6 tokens expected in " << datumName);
-                //        const string&ccy = tokens[2];
-                //        Period fwdStart = parsePeriod(tokens[3]);
-                //        Period tenor = parsePeriod(tokens[4]);
-                //        Period term = parsePeriod(tokens[5]);
-                //        return boost::make_shared<SwapQuote>(value, asof, datumName, quoteType, ccy, fwdStart, term, tenor);
-                //    }
+                case MarketDatum.InstrumentType.IR_SWAP:
+                    {
+                        Utils.QL_REQUIRE(tokens.Count == 6, () => "6 tokens expected in " + datumName);
+                        string ccy = tokens[2];
+                        Period fwdStart = Parsers.ParsePeriod(tokens[3]);
+                        Period tenor = Parsers.ParsePeriod(tokens[4]);
+                        Period term = Parsers.ParsePeriod(tokens[5]);                        
+                        return new SwapQuote(value, asof, datumName, quoteType, ccy, fwdStart, term, tenor);
+                    }
 
                 //case MarketDatum.InstrumentType.BASIS_SWAP:
                 //    {
@@ -206,17 +206,16 @@ namespace QLRData
                 //        return boost::make_shared<BasisSwapQuote>(value, asof, datumName, quoteType, flatTerm, term, ccy, maturity);
                 //    }
 
-                //case MarketDatum.InstrumentType.CC_BASIS_SWAP:
-                //    {
-                //        QL_REQUIRE(tokens.size() == 7, "7 tokens expected in " << datumName);
-                //        const string&flatCcy = tokens[2];
-                //        Period flatTerm = parsePeriod(tokens[3]);
-                //        const string&ccy = tokens[4];
-                //        Period term = parsePeriod(tokens[5]);
-                //        Period maturity = parsePeriod(tokens[6]);
-                //        return boost::make_shared<CrossCcyBasisSwapQuote>(value, asof, datumName, quoteType, flatCcy, flatTerm, ccy,
-                //                                                          term, maturity);
-                //    }
+                case MarketDatum.InstrumentType.CC_BASIS_SWAP:
+                    {
+                        Utils.QL_REQUIRE(tokens.Count == 7, () => "7 tokens expected in " + datumName);
+                        string flatCcy = tokens[2];
+                        Period flatTerm = Parsers.ParsePeriod(tokens[3]);
+                        string ccy = tokens[4];
+                        Period term = Parsers.ParsePeriod(tokens[5]);
+                        Period maturity = Parsers.ParsePeriod(tokens[6]);                        
+                        return new CrossCcyBasisSwapQuote(value, asof, datumName, quoteType, flatCcy, flatTerm, ccy,term, maturity);
+                    }
 
                 //case MarketDatum.InstrumentType.CDS:
                 //    {
@@ -274,61 +273,59 @@ namespace QLRData
                 //        }
                 //    }
 
-                //case MarketDatum.InstrumentType.SWAPTION:
-                //    {
-                //        QL_REQUIRE(tokens.size() == 4 || tokens.size() == 6 || tokens.size() == 7,
-                //                   "4, 6 or 7 tokens expected in " << datumName);
-                //        const string&ccy = tokens[2];
-                //        Period expiry = tokens.size() >= 6 ? parsePeriod(tokens[3]) : Period(0 * QuantLib::Days);
-                //        Period term = tokens.size() >= 6 ? parsePeriod(tokens[4]) : parsePeriod(tokens[3]);
-                //        if (tokens.size() >= 6)
-                //        { // volatility
-                //            const string&dimension = tokens[5];
-                //            Real strike = 0.0;
-                //            if (dimension == "ATM")
-                //                QL_REQUIRE(tokens.size() == 6, "6 tokens expected in ATM quote " << datumName);
-                //            else if (dimension == "Smile")
-                //            {
-                //                QL_REQUIRE(tokens.size() == 7, "7 tokens expected in Smile quote " << datumName);
-                //                strike = parseReal(tokens[6]);
-                //            }
-                //            else
-                //                QL_FAIL("Swaption vol quote dimension " << dimension << " not recognised");
-                //            return boost::make_shared<SwaptionQuote>(value, asof, datumName, quoteType, ccy, expiry, term, dimension,
-                //                                                     strike);
-                //        }
-                //        else
-                //        { // SLN volatility shift
-                //            return boost::make_shared<SwaptionShiftQuote>(value, asof, datumName, quoteType, ccy, term);
-                //        }
-                //    }
+                case MarketDatum.InstrumentType.SWAPTION:
+                    {
+                        Utils.QL_REQUIRE(tokens.Count == 4 || tokens.Count == 6 || tokens.Count == 7, () => "4, 6 or 7 tokens expected in " + datumName);
 
-                //case MarketDatum.InstrumentType.FX_SPOT:
-                //    {
-                //        QL_REQUIRE(tokens.size() == 4, "4 tokens expected in " << datumName);
-                //        const string&unitCcy = tokens[2];
-                //        const string&ccy = tokens[3];
-                //        return boost::make_shared<FXSpotQuote>(value, asof, datumName, quoteType, unitCcy, ccy);
-                //    }
+                        string ccy = tokens[2];
+                        Period expiry = tokens.Count >= 6 ? Parsers.ParsePeriod(tokens[3]) : new Period(0, TimeUnit.Days);
+                        Period term = tokens.Count >= 6 ? Parsers.ParsePeriod(tokens[4]) : Parsers.ParsePeriod(tokens[3]);
+                        if (tokens.Count >= 6)
+                        { // volatility
+                            string dimension = tokens[5];
+                            double strike = 0.0;
+                            if (dimension == "ATM") Utils.QL_REQUIRE(tokens.Count == 6, () => "6 tokens expected in ATM quote " + datumName);
+                            else if (dimension == "Smile")
+                            {
+                                Utils.QL_REQUIRE(tokens.Count == 7, () => "7 tokens expected in Smile quote " + datumName);
+                                strike = Parsers.ParseDouble(tokens[6]);
+                            }
+                            else Utils.QL_FAIL("Swaption vol quote dimension " + dimension + " not recognised");
+                            return new SwaptionQuote(value, asof, datumName, quoteType, ccy, expiry, term, dimension, strike);
+                        }
+                        else
+                        { // SLN volatility shift
+                            return null;
+                            //return new SwaptionShiftQuote(value, asof, datumName, quoteType, ccy, term);
+                        }
+                    }
 
-                //case MarketDatum.InstrumentType.FX_FWD:
-                //    {
-                //        QL_REQUIRE(tokens.size() == 5, "5 tokens expected in " << datumName);
-                //        const string&unitCcy = tokens[2];
-                //        const string&ccy = tokens[3];
-                //        Period term = parsePeriod(tokens[4]);
-                //        return boost::make_shared<FXForwardQuote>(value, asof, datumName, quoteType, unitCcy, ccy, term);
-                //    }
+                case MarketDatum.InstrumentType.FX_SPOT:
+                    {
+                        Utils.QL_REQUIRE(tokens.Count == 4, () => "4 tokens expected in " + datumName);
+                        string unitCcy = tokens[2];
+                        string ccy = tokens[3];
+                        return new FXSpotQuote(value, asof, datumName, quoteType, unitCcy, ccy);
+                    }
 
-                //case MarketDatum.InstrumentType.FX_OPTION:
-                //    {
-                //        QL_REQUIRE(tokens.size() == 6, "6 tokens expected in " << datumName);
-                //        const string&unitCcy = tokens[2];
-                //        const string&ccy = tokens[3];
-                //        Period expiry = parsePeriod(tokens[4]);
-                //        const string&strike = tokens[5];
-                //        return boost::make_shared<FXOptionQuote>(value, asof, datumName, quoteType, unitCcy, ccy, expiry, strike);
-                //    }
+                case MarketDatum.InstrumentType.FX_FWD:
+                    {
+                        Utils.QL_REQUIRE(tokens.Count == 5, () => "5 tokens expected in " + datumName);
+                        string unitCcy = tokens[2];
+                        string ccy = tokens[3];
+                        Period term = Parsers.ParsePeriod(tokens[4]);
+                        return new FXForwardQuote(value, asof, datumName, quoteType, unitCcy, ccy, term);
+                    }
+
+                case MarketDatum.InstrumentType.FX_OPTION:
+                    {
+                        Utils.QL_REQUIRE(tokens.Count == 6, () => "6 tokens expected in " + datumName);
+                        string unitCcy = tokens[2];
+                        string ccy = tokens[3];
+                        Period expiry = Parsers.ParsePeriod(tokens[4]);
+                        string strike = tokens[5];
+                        return new FXOptionQuote(value, asof, datumName, quoteType, unitCcy, ccy, expiry, strike);
+                    }
 
                 //case MarketDatum.InstrumentType.ZC_INFLATIONSWAP:
                 //    {
@@ -439,8 +436,8 @@ namespace QLRData
                 //    }
 
                 default:
-                    //Utils.QL_FAIL("Cannot convert \"" + datumName + "\" to MarketDatum");
-                    throw new Exception();
+                    //Utils.QL_FAIL("Cannot convert \"" + datumName + "\" to MarketDatum");                    
+                    return null;
             }
         }
     }

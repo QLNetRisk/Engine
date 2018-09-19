@@ -341,19 +341,19 @@ namespace QLRAnalytics
                 /**********************
                  * Curve configurations
                  */
-                CurveConfigurations curveConfigs;
+                CurveConfigurations curveConfigs = new CurveConfigurations();
                 if (_parameters.Has("setup", "curveConfigFile") && _parameters.Get("setup", "curveConfigFile") != "")
                 {
                     _out.Append(("Curve configuration... ").PadRight(_tab));
                     string curveConfigFile = inputPath + "/" + _parameters.Get("setup", "curveConfigFile");
-                    //curveConfigs.fromFile(curveConfigFile);
+                    curveConfigs.FromFile(curveConfigFile);
                     _out.Append("OK" + _endl);
                 }
                 else
                 {
                     //WLOG("No curve configurations loaded from file");
                 }
-                //_market = new TodaysMarket(_asof, _marketParameters, loader, curveConfigs, _conventions);
+                _market = new TodaysMarket(_asof, _marketParameters, loader, curveConfigs, _conventions);
             }
             else
             {

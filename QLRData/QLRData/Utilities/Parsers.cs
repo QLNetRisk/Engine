@@ -501,7 +501,7 @@ namespace QLRData
             }
         }
 
-        public static void ParseDateOrPeriod(string s, Date d, Period p, bool isDate)
+        public static void ParseDateOrPeriod(string s, Date d, Period p, out bool isDate)
         {
             Utils.QL_REQUIRE(s != string.Empty, () => "Cannot parse empty string as date or period");
             string c = s + "1"; // (1, s.back());

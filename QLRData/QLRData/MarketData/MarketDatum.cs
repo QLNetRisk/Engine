@@ -149,6 +149,29 @@ namespace QLRData
         }
     }
 
+    public class DiscountQuote : MarketDatum
+    {
+        private string _ccy;
+        private Date _date;
+
+        //! Constructor
+        public DiscountQuote(double value, Date asofDate, string name, QuoteType quoteType, string ccy, Date date)
+            : base(value, asofDate, name, quoteType, InstrumentType.DISCOUNT)
+        {
+            _ccy = ccy;
+            _date = date;
+        }
+        
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Date Date()
+        {
+            return _date;
+        }
+    }
+
     public class FXSpotQuote : MarketDatum
     {
         private string _unitCcy;
@@ -177,5 +200,287 @@ namespace QLRData
         {
             return _ccy;
         } 
+    }
+
+    public class FRAQuote : MarketDatum
+    {
+        private string _ccy;
+        private Period _fwdStart;
+        private Period _term;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="asofDate"></param>
+        /// <param name="name"></param>
+        /// <param name="quoteType"></param>
+        /// <param name="ccy"></param>
+        /// <param name="fwdStart"></param>
+        /// <param name="term"></param>
+        public FRAQuote(double value, Date asofDate, string name, QuoteType quoteType, string ccy, Period fwdStart, Period term)
+            : base(value, asofDate, name, quoteType, InstrumentType.FRA)
+        {
+            _term = term;
+            _ccy = ccy;
+            _fwdStart = fwdStart;
+        }
+
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Period FwdStart()
+        {
+            return _fwdStart;
+        }
+        public Period Term()
+        {
+            return _term;
+        }   
+    }
+
+    public class SwapQuote : MarketDatum
+    {
+        private string _ccy;
+        private Period _fwdStart;
+        private Period _term;
+        private Period _tenor;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="asofDate"></param>
+        /// <param name="name"></param>
+        /// <param name="quoteType"></param>
+        /// <param name="ccy"></param>
+        /// <param name="fwdStart"></param>
+        /// <param name="term"></param>
+        /// <param name="tenor"></param>
+        public SwapQuote(double value, Date asofDate, string name, QuoteType quoteType, string ccy, Period fwdStart, Period term, Period tenor)
+            : base(value, asofDate, name, quoteType, InstrumentType.IR_SWAP)  
+        {
+            _ccy = ccy;
+            _fwdStart = fwdStart;
+            _term = term;
+            _tenor = tenor;
+        }
+        
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Period FwdStart()
+        {
+            return _fwdStart;
+        }
+        public Period Term()
+        {
+            return _term;
+        }
+        public Period Tenor()
+        {
+            return _tenor;
+        }
+    }
+
+    public class CrossCcyBasisSwapQuote : MarketDatum
+    {
+        private string _flatCcy;
+        private Period _flatTerm;
+        private string _ccy;
+        private Period _term;
+        private Period _maturity;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="asofDate"></param>
+        /// <param name="name"></param>
+        /// <param name="quoteType"></param>
+        /// <param name="flatCcy"></param>
+        /// <param name="flatTerm"></param>
+        /// <param name="ccy"></param>
+        /// <param name="term"></param>
+        /// <param name="maturity"></param>
+        public CrossCcyBasisSwapQuote(double value, Date asofDate, string name, QuoteType quoteType, string flatCcy,
+                               Period flatTerm, string ccy, Period term, Period maturity = null)
+            : base(value, asofDate, name, quoteType, InstrumentType.CC_BASIS_SWAP)
+        {
+            _flatCcy = flatCcy;
+            _flatTerm = flatTerm;
+            _ccy = ccy;
+            _term = term;
+            _maturity = maturity == null? new Period(3, TimeUnit.Months) : maturity;                
+        }
+    
+        public string FlatCcy()
+        {
+            return _flatCcy;
+        }
+        public Period FlatTerm()
+        {
+            return _flatTerm;
+        }
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Period Term()
+        {
+            return _term;
+        }
+        public Period Maturity()
+        {
+            return _maturity;
+        }
+    }
+
+    public class SwaptionQuote : MarketDatum
+    {
+        private string _ccy;
+        private Period _expiry;
+        private Period _term;
+        private string _dimension;
+        private double _strike;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="asofDate"></param>
+        /// <param name="name"></param>
+        /// <param name="quoteType"></param>
+        /// <param name="ccy"></param>
+        /// <param name="expiry"></param>
+        /// <param name="term"></param>
+        /// <param name="dimension"></param>
+        /// <param name="strike"></param>
+        public SwaptionQuote(double value, Date asofDate, string name, QuoteType quoteType, string ccy, Period expiry,
+                      Period term, string dimension, double strike = 0.0)
+            : base(value, asofDate, name, quoteType, InstrumentType.SWAPTION)
+        {
+            _ccy = ccy;
+            _expiry = expiry;
+            _term = term;
+            _dimension = dimension;
+            _strike = strike;
+        }
+
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Period Expiry()
+        {
+            return _expiry;
+        }
+        public Period Term()
+        {
+            return _term;
+        }
+        public string Dimension()
+        {
+            return _dimension;
+        }
+        public double Strike()
+        {
+            return _strike;
+        }
+    }
+
+    public class FXForwardQuote : MarketDatum
+    {
+        private string _unitCcy;
+        private string _ccy;
+        private Period _term;
+        private double _conversionFactor;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="asofDate"></param>
+        /// <param name="name"></param>
+        /// <param name="quoteType"></param>
+        /// <param name="unitCcy"></param>
+        /// <param name="ccy"></param>
+        /// <param name="term"></param>
+        /// <param name="conversionFactor"></param>
+        public FXForwardQuote(double value, Date asofDate, string name, QuoteType quoteType, string unitCcy, string ccy,
+                       Period term, double conversionFactor = 1.0)
+            : base(value, asofDate, name, quoteType, InstrumentType.FX_FWD)
+        {
+            _unitCcy = unitCcy;
+            _ccy = ccy;
+            _term = term;
+            _conversionFactor = conversionFactor;
+        }
+    
+        public string UnitCcy()
+        {
+            return _unitCcy;
+        }
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Period Term()
+        {
+            return _term;
+        }
+        public double ConversionFactor()
+        {
+            return _conversionFactor;
+        }   
+    }
+
+    public class FXOptionQuote : MarketDatum
+    {
+        private string _unitCcy;
+        private string _ccy;
+        private Period _expiry;
+        private string _strike; // TODO: either: ATM, 25RR, 25BF. Should be an enum?
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="asofDate"></param>
+        /// <param name="name"></param>
+        /// <param name="quoteType"></param>
+        /// <param name="unitCcy"></param>
+        /// <param name="ccy"></param>
+        /// <param name="expiry"></param>
+        /// <param name="strike"></param>
+        public FXOptionQuote(double value, Date asofDate, string name, QuoteType quoteType, string unitCcy, string ccy, Period expiry, string strike)
+            : base(value, asofDate, name, quoteType, InstrumentType.FX_OPTION)
+        {
+            _unitCcy = unitCcy;
+            _ccy = ccy;
+            _expiry = expiry;
+            _strike = strike;
+
+            Utils.QL_REQUIRE(strike == "ATM" || strike == "25BF" || strike == "25RR", () => "Invalid FXOptionQuote strike (" + strike + ")");
+        }
+
+        public string UnitCcy()
+        {
+            return _unitCcy;
+        }
+        public string Ccy()
+        {
+            return _ccy;
+        }
+        public Period Expiry()
+        {
+            return _expiry;
+        }
+        public string Strike()
+        {
+            return _strike;
+        }    
     }
 }
