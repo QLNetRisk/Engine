@@ -19,9 +19,11 @@ namespace QLRData
 
             // store all curves built, since they might appear in several configurations
             // and might therefore be reused
-            Dictionary<string, YieldTermStructure> requiredYieldCurves = new Dictionary<string, YieldTermStructure>();
+            Dictionary<string, YieldCurve> requiredYieldCurves = new Dictionary<string, YieldCurve>();
             Dictionary<string, SwapIndex> requiredSwapIndices = new Dictionary<string, SwapIndex>();
             Dictionary<string, FXSpot> requiredFxSpots = new Dictionary<string, FXSpot>();
+            Dictionary<string, FXVolCurve> requiredFxVolCurves = new Dictionary<string, FXVolCurve>();
+            //Dictionary<string, SwaptionVolCurve> requiredSwaptionVolCurves = new Dictionary<string, SwaptionVolCurve>();           
 
             foreach (var configuration in todaysParams.Configurations())
             {
@@ -31,25 +33,74 @@ namespace QLRData
 
                 // Build the curve specs                
                 List<CurveSpec> specs = new List<CurveSpec>();
-                foreach (var it in todaysParams.CurveSpecs(configuration.Key[0].ToString()))
+                foreach (var it in todaysParams.CurveSpecs(configuration.Key))
                 {
-                    //specs.Add(parseCurveSpec(it));
+                    specs.Add(CurveSpecParser.ParseCurveSpec(it));
                     //DLOG("CurveSpec: " << specs.back()->name());
                 }
 
                 // order them
-                //order(specs, curveConfigs);
+                //Order(specs, curveConfigs);
                 bool swapIndicesBuilt = false;
 
                 // Loop over each spec, build the curve and add it to the MarketImpl container.
                 for (int count = 0; count < specs.Count; ++count)
                 {
-
                     var spec = specs[count];
                     //LOG("Loading spec " << *spec);
 
                     switch (spec.BaseType())
                     {
+                        case CurveSpec.CurveType.Yield:
+                            //YieldCurveSpec ycspec = new YieldCurveSpec(spec);
+                            //Utils.QL_REQUIRE(ycspec != null, () => "Failed to convert spec " + spec + " to yield curve spec");
+                            //// have we built the curve already ?
+                            //auto itr = requiredYieldCurves.find(ycspec->name());
+                            //if (itr == requiredYieldCurves.end())
+                            //{
+                            //    // build
+                            //    //LOG("Building YieldCurve for asof " << asof);
+                            //    YieldCurve yieldCurve = new YieldCurve(asof, *ycspec, curveConfigs, loader, conventions, requiredYieldCurves);
+
+                            //    itr = requiredYieldCurves.insert(make_pair(ycspec->name(), yieldCurve)).first;
+                            //}
+
+                            ////DLOG("Added YieldCurve \"" << ycspec->name() << "\" to requiredYieldCurves map");
+
+                            //if (itr->second->currency().code() != ycspec->ccy())
+                            //{
+                            //    //WLOG("Warning: YieldCurve has ccy " << itr->second->currency() << " but spec has ccy " << ycspec->ccy());
+                            
+                            //}
+
+                            //// We may have to add this spec multiple times (for discounting, yield and forwarding curves)
+                            //List<YieldCurveType> yieldCurveTypes = new List<YieldCurveType>{ YieldCurveType.Discount, YieldCurveType.Yield };
+                            //foreach (var y in yieldCurveTypes)
+                            //{
+                            //    MarketObject o = y as MarketObject;
+                            //    foreach (auto & it : params.mapping(o, configuration.first))
+                            //    {
+                            //        if (it.second == spec->name())
+                            //        {
+                            //            LOG("Adding YieldCurve(" << it.first << ") with spec " << *ycspec << " to configuration " << configuration.first);
+
+                            //        yieldCurves_[make_tuple(configuration.first, y, it.first)] = itr->second->handle();
+                            //        }
+                            //    }
+                            //}
+
+                            //for (const auto&it : params.mapping(MarketObject::IndexCurve, configuration.first)) 
+                            //{
+                            //    if (it.second == spec->name())
+                            //    {
+                            //        LOG("Adding Index(" << it.first << ") with spec " << *ycspec << " to configuration "
+                            //                            << configuration.first);
+                            //        iborIndices_[make_pair(configuration.first, it.first)] =
+                            //            Handle<IborIndex>(parseIborIndex(it.first, itr->second->handle()));
+                            //    }
+                            //}
+                        break;
+
                         case CurveSpec.CurveType.FX:
                             FXSpotSpec fxspec = spec as FXSpotSpec;
                             QLNet.Utils.QL_REQUIRE(fxspec != null, () => "Failed to convert spec " + spec + " to fx spot spec");

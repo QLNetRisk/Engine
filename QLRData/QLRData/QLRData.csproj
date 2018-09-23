@@ -47,6 +47,7 @@
     <Compile Include="Configuration\Conventions.cs" />
     <Compile Include="Configuration\CurveConfig.cs" />
     <Compile Include="Configuration\CurveConfigurations.cs" />
+    <Compile Include="Configuration\FXVolatilityCurveConfig.cs" />
     <Compile Include="Configuration\OisConvention.cs" />
     <Compile Include="Configuration\FutureConvention.cs" />
     <Compile Include="Configuration\FraConvention.cs" />
@@ -56,11 +57,14 @@
     <Compile Include="Configuration\YieldCurveConfig.cs" />
     <Compile Include="Configuration\YieldCurveSegment.cs" />
     <Compile Include="Configuration\ZeroRateConvention.cs" />
+    <Compile Include="MarketData\CurveLoader.cs" />
     <Compile Include="MarketData\CurveSpec.cs" />
+    <Compile Include="MarketData\CurveSpecParser.cs" />
     <Compile Include="MarketData\Fixing.cs" />
     <Compile Include="MarketData\FXSpot.cs" />
     <Compile Include="MarketData\FxTriangulation.cs" />
     <Compile Include="MarketData\CsvLoader.cs" />
+    <Compile Include="MarketData\FXVolCurve.cs" />
     <Compile Include="MarketData\Loader.cs" />
     <Compile Include="MarketData\Market.cs" />
     <Compile Include="MarketData\MarketConfiguration.cs" />
@@ -68,6 +72,7 @@
     <Compile Include="MarketData\MarketImpl.cs" />
     <Compile Include="MarketData\TodaysMarket.cs" />
     <Compile Include="MarketData\TodaysMarketParameters.cs" />
+    <Compile Include="MarketData\YieldCurve.cs" />
     <Compile Include="Portfolio\Builders\CachingEngineBuilder.cs" />
     <Compile Include="Portfolio\Builders\FxForwardEngineBuilder.cs" />
     <Compile Include="Portfolio\EngineBuilder.cs" />

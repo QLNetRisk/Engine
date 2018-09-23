@@ -17,7 +17,7 @@ namespace QLRData
 
         public static IborIndex ParseIborIndex(string s, Handle<YieldTermStructure> h = null)
         {
-            List<string> tokens = s.Split('-').ToList();            
+            List<string> tokens = s.Split('-').ToList();
 
             QLNet.Utils.QL_REQUIRE(tokens.Count == 2 || tokens.Count == 3, () => "Two or three tokens required in " + s + ": CCY-INDEX or CCY-INDEX-TERM");
 
@@ -25,11 +25,11 @@ namespace QLRData
             if (tokens.Count == 3)
             {
                 p = ParsePeriod(tokens[2]);
-            }                
+            }
             else
             {
                 p = new Period(1, TimeUnit.Days); // TODO: Verify!
-            }                
+            }
 
             Dictionary<string, IborIndexParser> m = new Dictionary<string, IborIndexParser>()
                 {{"EUR-EONIA", new IborIndexParserOIS<Eonia>()},
@@ -171,12 +171,12 @@ namespace QLRData
         {
             DateTime date = new DateTime();
 
-            if (DateTime.TryParse(s, out date)) return date;            
+            if (DateTime.TryParse(s, out date)) return date;
             else
             {
                 QLNet.Utils.QL_FAIL("Cannot convert \"" + s + "\" to Date.");
                 return new Date();
-            } 
+            }
         }
 
         public static double ParseDouble(string s)
@@ -198,8 +198,8 @@ namespace QLRData
             {
                 return Convert.ToInt32(s);
             }
-            catch(Exception ex)
-            {                
+            catch (Exception ex)
+            {
                 QLNet.Utils.QL_FAIL("Failed to parse integer " + s + " " + ex.ToString());
                 throw new Exception();
             }
@@ -357,7 +357,7 @@ namespace QLRData
                         QLNet.Utils.QL_FAIL("Cannot convert " + s + " to Calendar");
                         throw new Exception();
                 }
-            }            
+            }
         }
 
         public static BusinessDayConvention ParseBusinessDayConvention(string s)
@@ -383,7 +383,7 @@ namespace QLRData
                                                    {"NEAREST", BusinessDayConvention.Nearest},
                                                    {"NONE", BusinessDayConvention.Unadjusted},
                                                    {"NotApplicable", BusinessDayConvention.Unadjusted}};
-            
+
             if (m.ContainsKey(s))
             {
                 return m[s];
@@ -438,7 +438,7 @@ namespace QLRData
                                         {"Act/365 (NL)", new Actual365Fixed()},
                                         {"NL/365", new Actual365Fixed()},
                                         {"Actual/365 (JGB)", new Actual365Fixed()}};
-            
+
             if (m.ContainsKey(s))
             {
                 return m[s];
@@ -489,7 +489,7 @@ namespace QLRData
                                        {"Weekly", Frequency.Weekly},
                                        {"D", Frequency.Daily},
                                        {"Daily", Frequency.Daily}};
-            
+
             if (m.ContainsKey(s))
             {
                 return m[s];
@@ -517,6 +517,19 @@ namespace QLRData
                 Utils.QL_REQUIRE(d != new Date(), () => "Cannot parse \"" + s + "\" as date");
                 isDate = true;
             }
+        }
+
+        public static List<T> ParseListOfValues<T>(string s, Func<string, T> parser)
+        {
+            s = s.Trim();
+            List<T> vec = new List<T>();
+            List<string> tokens = s.Split(',').ToList();
+            
+            foreach(string r in tokens)
+            {            
+                vec.Add(parser(r.Trim()));
+            }
+            return vec;
         }
     }
 }

@@ -58,18 +58,68 @@ namespace QLRData
             return node.Name;            
         }
 
+        public virtual string GetNodeValue(XmlNode node)
+        {
+            if (node.NodeType == XmlNodeType.Text) return node.Value;
+            else return node.Name;
+        }
+
         public virtual string GetChildValue(XmlNode node, string name, bool mandatory = false)
         {
             try
             {
-                string value = node.SelectSingleNode(name).FirstChild.Value;
-                return value;
+                foreach(XmlNode child in node.ChildNodes)
+                {
+                    if(child.NodeType == XmlNodeType.Text)
+                    {
+                        if (node.Name == name) return child.Value;                        
+                    }
+                    else
+                    {
+                        if (child.Name == name && child.FirstChild != null) return child.FirstChild.Value ?? "";
+                    }
+                    
+                    //if (child.Name == name && child.NodeType == XmlNodeType.Element && child.FirstChild != null) return child.FirstChild.Value ?? "";
+                    //if (child.Name == name && child.NodeType == XmlNodeType.Text) return child.Value ?? "";
+                }
+                //string value = node.ChildNodes SelectSingleNode(name).FirstChild.Value;
+                //return value;
+                return "";
             }
             catch(Exception ex)
             {
                 if (mandatory) throw ex;
                 else return string.Empty;
             }            
+        }
+
+        public virtual List<string> GetChildrenValues(XmlNode parent, string names, string name, bool mandatory = false)
+        {
+            List<string> values = new List<string>();
+            XmlNode node = GetChildNode(parent, names);
+
+            if (mandatory)
+            {
+                Utils.QL_REQUIRE(node != null, () => "Error: No XML Node " + names + " found.");
+            }
+            if (node != null)
+            {
+                XmlNode child = GetChildNode(node, name);
+                //values.Add(GetChildValue(node, name));
+                while (child != null)
+                {
+                    values.Add(GetChildValue(child, name, true));
+                    child = GetNextSibling(child, name);
+                }               
+            }            
+
+            return values;
+        }
+
+        public List<Period> GetChildrenValuesAsPeriods(XmlNode node, string name, bool mandatory)
+        {
+            string s = GetChildValue(node, name, mandatory);
+            return Parsers.ParseListOfValues<Period>(s, Parsers.ParsePeriod);
         }
 
         public virtual List<XmlNode> GetChildrenNodes(XmlNode node, string name)

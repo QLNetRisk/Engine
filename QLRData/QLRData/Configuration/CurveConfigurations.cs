@@ -10,7 +10,7 @@ namespace QLRData
     public class CurveConfigurations : XmlSerializable
     {
         private Dictionary<string, YieldCurveConfig> _yieldCurveConfigs = new Dictionary<string, YieldCurveConfig>();
-        //private Dictionary<string, FXVolatilityCurveConfig>> fxVolCurveConfigs_;
+        private Dictionary<string, FXVolatilityCurveConfig> _fxVolCurveConfigs = new Dictionary<string, FXVolatilityCurveConfig>();
         //private Dictionary<string, SwaptionVolatilityCurveConfig>> swaptionVolCurveConfigs_;
         //private Dictionary<string, CapFloorVolatilityCurveConfig>> capFloorVolCurveConfigs_;
         //private Dictionary<string, DefaultCurveConfig>> defaultCurveConfigs_;
@@ -36,13 +36,18 @@ namespace QLRData
             return _yieldCurveConfigs[curveID];
         }
 
+        public FXVolatilityCurveConfig FxVolCurveConfig(string curveID)
+        {
+            return _fxVolCurveConfigs[curveID];
+        }
+
         public HashSet<string> Quotes()
         {
             List<string> quotes = new List<string>();
             foreach(KeyValuePair<string, YieldCurveConfig> kvp in _yieldCurveConfigs)
                 quotes.AddRange(kvp.Value.Quotes());
-            //for (auto m : fxVolCurveConfigs_)
-            //    quotes.insert(quotes.end(), m.second->quotes().begin(), m.second->quotes().end());
+            foreach (KeyValuePair<string, FXVolatilityCurveConfig> kvp in _fxVolCurveConfigs)
+                quotes.AddRange(kvp.Value.Quotes());            
             //for (auto m : swaptionVolCurveConfigs_)
             //    quotes.insert(quotes.end(), m.second->quotes().begin(), m.second->quotes().end());
             //for (auto m : capFloorVolCurveConfigs_)
@@ -75,7 +80,7 @@ namespace QLRData
 
             // Load YieldCurves, FXVols, etc, etc
             ParseNode(node, "YieldCurves", "YieldCurve", _yieldCurveConfigs);
-            //parseNode(node, "FXVolatilities", "FXVolatility", fxVolCurveConfigs_);
+            ParseNode(node, "FXVolatilities", "FXVolatility", _fxVolCurveConfigs);
             //parseNode(node, "SwaptionVolatilities", "SwaptionVolatility", swaptionVolCurveConfigs_);
             //parseNode(node, "CapFloorVolatilities", "CapFloorVolatility", capFloorVolCurveConfigs_);
             //parseNode(node, "DefaultCurves", "DefaultCurve", defaultCurveConfigs_);
@@ -102,18 +107,22 @@ namespace QLRData
             {
                 XmlNode child = GetChildNode(parentNode, childName);
 
-                foreach (XmlNode sibling in GetNextSibling(child, childName))
+                //foreach (XmlNode sibling in GetNextSibling(child, childName))
+                while(child != null)
                 {
                     T curveConfig = (T)Activator.CreateInstance(typeof(T));
                     try
                     {
-                        curveConfig.FromXML(sibling);
+                        curveConfig.FromXML(child);
                         string id = curveConfig.CurveID();
                         m.Add(id, curveConfig);
                         //DLOG("Added curve config with ID = " << id);
+
+                        child = GetNextSibling(child, childName);
                     }
                     catch (Exception ex)
                     {
+                        var debug = "";
                         //ALOG("Exception parsing curve config: " << ex.what());
                     }
                 }
