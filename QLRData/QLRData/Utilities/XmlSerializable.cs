@@ -122,6 +122,12 @@ namespace QLRData
             return Parsers.ParseListOfValues<Period>(s, Parsers.ParsePeriod);
         }
 
+        public List<double> GetChildrenValuesAsDoublesCompact(XmlNode node, string name, bool mandatory)
+        {
+            string s = GetChildValue(node, name, mandatory);
+            return Parsers.ParseListOfValues<double>(s, Parsers.ParseDouble);
+        }
+        
         public virtual List<XmlNode> GetChildrenNodes(XmlNode node, string name)
         {
             Utils.QL_REQUIRE(node != null, () => "XMLUtils.GetAttribute() node is NULL");
@@ -213,6 +219,12 @@ namespace QLRData
             string s = GetChildValue(node, name, mandatory);
             return s == "" ? true : Parsers.ParseBool(s); 
         }
+
+        //public virtual List<Period> GetChildrenValuesAsPeriods(XmlNode node, string name, bool mandatory)
+        //{
+        //    string s = GetChildValue(node, name, mandatory);
+        //    return Parsers.ParseListOfValues(s, Parsers.ParsePeriod);
+        //}
 
         public void CheckNode(XmlNode node, string expectedName)
         {

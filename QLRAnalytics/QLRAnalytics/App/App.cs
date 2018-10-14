@@ -68,6 +68,7 @@ namespace QLRAnalytics
             {
                 SetupLog();
                 _out.Append("ORE starting" + _endl);
+                Console.WriteLine("ORE starting");
                 //LOG("ORE starting");
                 ReadSetup();
                

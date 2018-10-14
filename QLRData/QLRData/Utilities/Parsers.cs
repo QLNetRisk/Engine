@@ -522,6 +522,10 @@ namespace QLRData
         public static List<T> ParseListOfValues<T>(string s, Func<string, T> parser)
         {
             s = s.Trim();
+
+            // Return empy list if string is empty
+            if (s == string.Empty) return new List<T>();
+
             List<T> vec = new List<T>();
             List<string> tokens = s.Split(',').ToList();
             

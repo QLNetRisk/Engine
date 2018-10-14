@@ -11,7 +11,7 @@ namespace QLRData
     {
         private Dictionary<string, YieldCurveConfig> _yieldCurveConfigs = new Dictionary<string, YieldCurveConfig>();
         private Dictionary<string, FXVolatilityCurveConfig> _fxVolCurveConfigs = new Dictionary<string, FXVolatilityCurveConfig>();
-        //private Dictionary<string, SwaptionVolatilityCurveConfig>> swaptionVolCurveConfigs_;
+        private Dictionary<string, SwaptionVolatilityCurveConfig> _swaptionVolCurveConfigs = new Dictionary<string, SwaptionVolatilityCurveConfig>();
         //private Dictionary<string, CapFloorVolatilityCurveConfig>> capFloorVolCurveConfigs_;
         //private Dictionary<string, DefaultCurveConfig>> defaultCurveConfigs_;
         //private Dictionary<string, CDSVolatilityCurveConfig>> cdsVolCurveConfigs_;
@@ -21,7 +21,7 @@ namespace QLRData
         //private Dictionary<string, EquityCurveConfig>> equityCurveConfigs_;
         //private Dictionary<string, EquityVolatilityCurveConfig>> equityVolCurveConfigs_;
         //private Dictionary<string, SecurityConfig>> securityConfigs_;
-        //private Dictionary<string, FXSpotConfig>> fxSpotConfigs_;
+        private Dictionary<string, FXSpotConfig> _fxSpotConfigs = new Dictionary<string, FXSpotConfig>();
 
         /// <summary>
         /// Default constructor
@@ -41,15 +41,25 @@ namespace QLRData
             return _fxVolCurveConfigs[curveID];
         }
 
+        public SwaptionVolatilityCurveConfig SwaptionVolCurveConfig(string curveID)
+        {
+            return _swaptionVolCurveConfigs[curveID];
+        }
+
+        public FXSpotConfig FXSpotConfig(string curveID)
+        {
+            return _fxSpotConfigs[curveID];
+        }
+
         public HashSet<string> Quotes()
         {
             List<string> quotes = new List<string>();
             foreach(KeyValuePair<string, YieldCurveConfig> kvp in _yieldCurveConfigs)
                 quotes.AddRange(kvp.Value.Quotes());
             foreach (KeyValuePair<string, FXVolatilityCurveConfig> kvp in _fxVolCurveConfigs)
-                quotes.AddRange(kvp.Value.Quotes());            
-            //for (auto m : swaptionVolCurveConfigs_)
-            //    quotes.insert(quotes.end(), m.second->quotes().begin(), m.second->quotes().end());
+                quotes.AddRange(kvp.Value.Quotes());
+            foreach (KeyValuePair<string, SwaptionVolatilityCurveConfig> kvp in _swaptionVolCurveConfigs)
+                quotes.AddRange(kvp.Value.Quotes());
             //for (auto m : capFloorVolCurveConfigs_)
             //    quotes.insert(quotes.end(), m.second->quotes().begin(), m.second->quotes().end());
             //for (auto m : defaultCurveConfigs_)
@@ -68,9 +78,9 @@ namespace QLRData
             //    quotes.insert(quotes.end(), m.second->quotes().begin(), m.second->quotes().end());
             //for (auto m : securityConfigs_)
             //    quotes.insert(quotes.end(), m.second->quotes().begin(), m.second->quotes().end());
-            //for (auto m : fxSpotConfigs_)
-            //    quotes.insert(quotes.end(), m.second->quotes().begin(), m.second->quotes().end());
-
+            foreach (KeyValuePair<string, FXSpotConfig> kvp in _fxSpotConfigs)
+                quotes.AddRange(kvp.Value.Quotes());
+            
             return new HashSet<string>(quotes);
         }               
 
@@ -81,7 +91,7 @@ namespace QLRData
             // Load YieldCurves, FXVols, etc, etc
             ParseNode(node, "YieldCurves", "YieldCurve", _yieldCurveConfigs);
             ParseNode(node, "FXVolatilities", "FXVolatility", _fxVolCurveConfigs);
-            //parseNode(node, "SwaptionVolatilities", "SwaptionVolatility", swaptionVolCurveConfigs_);
+            ParseNode(node, "SwaptionVolatilities", "SwaptionVolatility", _swaptionVolCurveConfigs);
             //parseNode(node, "CapFloorVolatilities", "CapFloorVolatility", capFloorVolCurveConfigs_);
             //parseNode(node, "DefaultCurves", "DefaultCurve", defaultCurveConfigs_);
             //parseNode(node, "CDSVolatilities", "CDSVolatility", cdsVolCurveConfigs_);
@@ -92,7 +102,7 @@ namespace QLRData
             //parseNode(node, "InflationCapFloorPriceSurfaces", "InflationCapFloorPriceSurface",
             //          inflationCapFloorPriceSurfaceConfigs_);
             //parseNode(node, "Securities", "Security", securityConfigs_);
-            //parseNode(node, "FXSpots", "FXSpot", fxSpotConfigs_);
+            ParseNode(node, "FXSpots", "FXSpot", _fxSpotConfigs);
         }
 
         public override void ToXML(XmlDocument doc)

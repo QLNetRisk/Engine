@@ -47,6 +47,7 @@
     <Compile Include="Configuration\Conventions.cs" />
     <Compile Include="Configuration\CurveConfig.cs" />
     <Compile Include="Configuration\CurveConfigurations.cs" />
+    <Compile Include="Configuration\FXSpotConfig.cs" />
     <Compile Include="Configuration\FXVolatilityCurveConfig.cs" />
     <Compile Include="Configuration\OisConvention.cs" />
     <Compile Include="Configuration\FutureConvention.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Configuration\IRSwapConvention.cs" />
     <Compile Include="Configuration\DepositConvention.cs" />
     <Compile Include="Configuration\FXConvention.cs" />
+    <Compile Include="Configuration\SwaptionVolatilityCurveConfig.cs" />
     <Compile Include="Configuration\YieldCurveConfig.cs" />
     <Compile Include="Configuration\YieldCurveSegment.cs" />
     <Compile Include="Configuration\ZeroRateConvention.cs" />
