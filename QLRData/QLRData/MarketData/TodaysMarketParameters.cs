@@ -16,32 +16,37 @@ namespace QLRData
         private Dictionary<string, MarketConfiguration> _configurations = new Dictionary<string, MarketConfiguration>();
         private Dictionary<MarketObject, Dictionary<string, Dictionary<string, string>>> _marketObjects = new Dictionary<MarketObject, Dictionary<string, Dictionary<string, string>>>();
 
-        private const int numberOfMarketObjects = 17;
+        private const int numberOfMarketObjects = 23;
 
         // clang-format off
         private readonly List<string> marketObjectStrings = new List<string>(){"DiscountCurve", "YieldCurve", "IndexCurve", "SwapIndexCurve",
-                                                   "FXSpot", "FXVol", "SwaptionVol", "DefaultCurve", "CDSVol",
-                                                   "BaseCorrelation", "CapFloorVol", "ZeroInflationCurve",
-                                                   "YoYInflationCurve", "InflationCapFloorPriceSurface",
-                                                   "EquityCurves", "EquityVols", "Securities"};
+                                             "FXSpot", "FXVol", "SwaptionVol", "DefaultCurve", "CDSVol",
+                                             "BaseCorrelation", "CapFloorVol", "ZeroInflationCurve",
+                                             "YoYInflationCurve", "InflationCapFloorPriceSurface",
+                                             "YoYInflationCapFloorPriceSurface", "ZeroInflationCapFloorVol",
+                                             "YoYInflationCapFloorVol", "EquityCurves", "EquityVols",
+                                             "Securities", "CommodityCurves", "CommodityVolatilities", "Correlation"};
         private readonly List<string> marketObjectXMLNames = new List<string>(){"DiscountingCurves", "YieldCurves", "IndexForwardingCurves",
-                                                    "SwapIndexCurves",
-                                                    "FxSpots", "FxVolatilities", "SwaptionVolatilities",
-                                                    "DefaultCurves", "CDSVolatilities", "BaseCorrelations",
-                                                    "CapFloorVolatilities",
-                                                    "ZeroInflationIndexCurves", "YYInflationIndexCurves",
-                                                    "InflationCapFloorPriceSurfaces",
-                                                    "EquityCurves", "EquityVolatilities",
-                                                    "Securities"};
+                                              "SwapIndexCurves",
+                                              "FxSpots", "FxVolatilities", "SwaptionVolatilities",
+                                              "DefaultCurves", "CDSVolatilities", "BaseCorrelations",
+                                              "CapFloorVolatilities",
+                                              "ZeroInflationIndexCurves", "YYInflationIndexCurves",
+                                              "InflationCapFloorPriceSurfaces", "YYInflationCapFloorPriceSurfaces",
+                                              "ZeroInflationCapFloorVolatilities", "YYInflationCapFloorVolatilities",
+                                              "EquityCurves", "EquityVolatilities",
+                                              "Securities", "CommodityCurves", "CommodityVolatilities", "Correlations"};
         private readonly OrderedDictionary marketObjectXMLNamesSingle = new OrderedDictionary(){
-                                                    { "DiscountingCurve", "currency" },
-                                                    {"YieldCurve", "name"},
-                                                    {"Index", "name"}, {"SwapIndex", "name"},
+                                                    {"DiscountingCurve", "currency"}, {"YieldCurve", "name"}, {"Index", "name"}, {"SwapIndex", "name"},
                                                     {"FxSpot", "pair"}, {"FxVolatility", "pair"}, {"SwaptionVolatility", "currency"},
                                                     {"DefaultCurve", "name"}, {"CDSVolatility", "name"}, {"BaseCorrelation", "name"},
                                                     {"CapFloorVolatility", "currency"}, {"ZeroInflationIndexCurve", "name"},
                                                     {"YYInflationIndexCurve", "name"}, {"InflationCapFloorPriceSurface", "name"},
-                                                    {"EquityCurve", "name"}, {"EquityVolatility", "name"}, {"Security", "name"}};
+                                                    {"YYInflationCapFloorPriceSurface", "name" },
+                                                    {"ZeroInflationCapFloorVolatility", "name" },
+                                                    {"YYInflationCapFloorVolatility", "name" },
+                                                    {"EquityCurve", "name"}, {"EquityVolatility", "name"}, {"Security", "name"},
+                                                    {"CommodityCurve", "name"}, {"CommodityVolatility", "name"}, {"Correlation", "name"}};
 
         /// <summary>
         /// Default constructor
